@@ -1,9 +1,9 @@
-name: Weekly SEO Audit
+name: Daily SEO Audit
 
 on:
   schedule:
-    # Every Monday 03:00 UTC (~08:30 IST)
-    - cron: "0 3 * * 1"
+    # Every day 03:00 UTC (~08:30 IST, before the studio opens at 10:00 AM)
+    - cron: "0 3 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -38,5 +38,5 @@ jobs:
           git config user.name "seo-audit-bot"
           git config user.email "actions@github.com"
           git add data/lighthouse-history.json
-          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Weekly SEO audit $(date -u +'%Y-%m-%d')"
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Daily SEO audit $(date -u +'%Y-%m-%d')"
           git push

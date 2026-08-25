@@ -1,0 +1,1341 @@
+{
+  "startDate": "2026-08-31",
+  "endDate": "2026-11-28",
+  "totalDays": 90,
+  "monthNames": {
+    "1": "Month 1 — Foundation",
+    "2": "Month 2 — Content Depth",
+    "3": "Month 3 — Local Citations"
+  },
+  "entries": [
+    {
+      "day": 1,
+      "date": "2026-08-31",
+      "dayOfWeek": "Monday",
+      "week": 1,
+      "month": 1,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Claim & verify Google Business Profile; complete every field (see GBP Content Pack)",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 2,
+      "date": "2026-09-01",
+      "dayOfWeek": "Tuesday",
+      "week": 1,
+      "month": 1,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 3,
+      "date": "2026-09-02",
+      "dayOfWeek": "Wednesday",
+      "week": 1,
+      "month": 1,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 4,
+      "date": "2026-09-03",
+      "dayOfWeek": "Thursday",
+      "week": 1,
+      "month": 1,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 5,
+      "date": "2026-09-04",
+      "dayOfWeek": "Friday",
+      "week": 1,
+      "month": 1,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 6,
+      "date": "2026-09-05",
+      "dayOfWeek": "Saturday",
+      "week": 1,
+      "month": 1,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 7,
+      "date": "2026-09-06",
+      "dayOfWeek": "Sunday",
+      "week": 1,
+      "month": 1,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 8,
+      "date": "2026-09-07",
+      "dayOfWeek": "Monday",
+      "week": 2,
+      "month": 1,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 9,
+      "date": "2026-09-08",
+      "dayOfWeek": "Tuesday",
+      "week": 2,
+      "month": 1,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 10,
+      "date": "2026-09-09",
+      "dayOfWeek": "Wednesday",
+      "week": 2,
+      "month": 1,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Connect Google Search Console to the live domain so rankings become measurable",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 11,
+      "date": "2026-09-10",
+      "dayOfWeek": "Thursday",
+      "week": 2,
+      "month": 1,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 12,
+      "date": "2026-09-11",
+      "dayOfWeek": "Friday",
+      "week": 2,
+      "month": 1,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 13,
+      "date": "2026-09-12",
+      "dayOfWeek": "Saturday",
+      "week": 2,
+      "month": 1,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 14,
+      "date": "2026-09-13",
+      "dayOfWeek": "Sunday",
+      "week": 2,
+      "month": 1,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 15,
+      "date": "2026-09-14",
+      "dayOfWeek": "Monday",
+      "week": 3,
+      "month": 1,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Replace placeholder address/phone with real details across site schema, GBP, and Instagram bio (NAP consistency)",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 16,
+      "date": "2026-09-15",
+      "dayOfWeek": "Tuesday",
+      "week": 3,
+      "month": 1,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 17,
+      "date": "2026-09-16",
+      "dayOfWeek": "Wednesday",
+      "week": 3,
+      "month": 1,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 18,
+      "date": "2026-09-17",
+      "dayOfWeek": "Thursday",
+      "week": 3,
+      "month": 1,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 19,
+      "date": "2026-09-18",
+      "dayOfWeek": "Friday",
+      "week": 3,
+      "month": 1,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 20,
+      "date": "2026-09-19",
+      "dayOfWeek": "Saturday",
+      "week": 3,
+      "month": 1,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 21,
+      "date": "2026-09-20",
+      "dayOfWeek": "Sunday",
+      "week": 3,
+      "month": 1,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 22,
+      "date": "2026-09-21",
+      "dayOfWeek": "Monday",
+      "week": 4,
+      "month": 1,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 23,
+      "date": "2026-09-22",
+      "dayOfWeek": "Tuesday",
+      "week": 4,
+      "month": 1,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 24,
+      "date": "2026-09-23",
+      "dayOfWeek": "Wednesday",
+      "week": 4,
+      "month": 1,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Seed the first 2 of 5 GBP Q&A entries from the website FAQ",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 25,
+      "date": "2026-09-24",
+      "dayOfWeek": "Thursday",
+      "week": 4,
+      "month": 1,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 26,
+      "date": "2026-09-25",
+      "dayOfWeek": "Friday",
+      "week": 4,
+      "month": 1,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 27,
+      "date": "2026-09-26",
+      "dayOfWeek": "Saturday",
+      "week": 4,
+      "month": 1,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 28,
+      "date": "2026-09-27",
+      "dayOfWeek": "Sunday",
+      "week": 4,
+      "month": 1,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 29,
+      "date": "2026-09-28",
+      "dayOfWeek": "Monday",
+      "week": 5,
+      "month": 2,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Seed the remaining 3 GBP Q&A entries",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 30,
+      "date": "2026-09-29",
+      "dayOfWeek": "Tuesday",
+      "week": 5,
+      "month": 2,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 31,
+      "date": "2026-09-30",
+      "dayOfWeek": "Wednesday",
+      "week": 5,
+      "month": 2,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Review Month 1 dashboard data — Lighthouse trend + any GBP/Instagram numbers now available",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 32,
+      "date": "2026-10-01",
+      "dayOfWeek": "Thursday",
+      "week": 5,
+      "month": 2,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 33,
+      "date": "2026-10-02",
+      "dayOfWeek": "Friday",
+      "week": 5,
+      "month": 2,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 34,
+      "date": "2026-10-03",
+      "dayOfWeek": "Saturday",
+      "week": 5,
+      "month": 2,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 35,
+      "date": "2026-10-04",
+      "dayOfWeek": "Sunday",
+      "week": 5,
+      "month": 2,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 36,
+      "date": "2026-10-05",
+      "dayOfWeek": "Monday",
+      "week": 6,
+      "month": 2,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Publish blog post — \"How much does a keratin treatment cost in Chennai?\"",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 37,
+      "date": "2026-10-06",
+      "dayOfWeek": "Tuesday",
+      "week": 6,
+      "month": 2,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 38,
+      "date": "2026-10-07",
+      "dayOfWeek": "Wednesday",
+      "week": 6,
+      "month": 2,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 39,
+      "date": "2026-10-08",
+      "dayOfWeek": "Thursday",
+      "week": 6,
+      "month": 2,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 40,
+      "date": "2026-10-09",
+      "dayOfWeek": "Friday",
+      "week": 6,
+      "month": 2,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 41,
+      "date": "2026-10-10",
+      "dayOfWeek": "Saturday",
+      "week": 6,
+      "month": 2,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 42,
+      "date": "2026-10-11",
+      "dayOfWeek": "Sunday",
+      "week": 6,
+      "month": 2,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 43,
+      "date": "2026-10-12",
+      "dayOfWeek": "Monday",
+      "week": 7,
+      "month": 2,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 44,
+      "date": "2026-10-13",
+      "dayOfWeek": "Tuesday",
+      "week": 7,
+      "month": 2,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 45,
+      "date": "2026-10-14",
+      "dayOfWeek": "Wednesday",
+      "week": 7,
+      "month": 2,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Add a dedicated bridal portfolio/gallery section once real client photos are available",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 46,
+      "date": "2026-10-15",
+      "dayOfWeek": "Thursday",
+      "week": 7,
+      "month": 2,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 47,
+      "date": "2026-10-16",
+      "dayOfWeek": "Friday",
+      "week": 7,
+      "month": 2,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 48,
+      "date": "2026-10-17",
+      "dayOfWeek": "Saturday",
+      "week": 7,
+      "month": 2,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 49,
+      "date": "2026-10-18",
+      "dayOfWeek": "Sunday",
+      "week": 7,
+      "month": 2,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 50,
+      "date": "2026-10-19",
+      "dayOfWeek": "Monday",
+      "week": 8,
+      "month": 2,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Publish blog post — \"Preparing for your bridal makeup trial\"",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 51,
+      "date": "2026-10-20",
+      "dayOfWeek": "Tuesday",
+      "week": 8,
+      "month": 2,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 52,
+      "date": "2026-10-21",
+      "dayOfWeek": "Wednesday",
+      "week": 8,
+      "month": 2,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 53,
+      "date": "2026-10-22",
+      "dayOfWeek": "Thursday",
+      "week": 8,
+      "month": 2,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 54,
+      "date": "2026-10-23",
+      "dayOfWeek": "Friday",
+      "week": 8,
+      "month": 2,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 55,
+      "date": "2026-10-24",
+      "dayOfWeek": "Saturday",
+      "week": 8,
+      "month": 2,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 56,
+      "date": "2026-10-25",
+      "dayOfWeek": "Sunday",
+      "week": 8,
+      "month": 2,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 57,
+      "date": "2026-10-26",
+      "dayOfWeek": "Monday",
+      "week": 9,
+      "month": 3,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 58,
+      "date": "2026-10-27",
+      "dayOfWeek": "Tuesday",
+      "week": 9,
+      "month": 3,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 59,
+      "date": "2026-10-28",
+      "dayOfWeek": "Wednesday",
+      "week": 9,
+      "month": 3,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Expand the FAQ with 3 real questions pulled from actual customer WhatsApp/DM queries",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 60,
+      "date": "2026-10-29",
+      "dayOfWeek": "Thursday",
+      "week": 9,
+      "month": 3,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 61,
+      "date": "2026-10-30",
+      "dayOfWeek": "Friday",
+      "week": 9,
+      "month": 3,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 62,
+      "date": "2026-10-31",
+      "dayOfWeek": "Saturday",
+      "week": 9,
+      "month": 3,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 63,
+      "date": "2026-11-01",
+      "dayOfWeek": "Sunday",
+      "week": 9,
+      "month": 3,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 64,
+      "date": "2026-11-02",
+      "dayOfWeek": "Monday",
+      "week": 10,
+      "month": 3,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Instagram content-pillar review — check Insights, double down on the best-performing format",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 65,
+      "date": "2026-11-03",
+      "dayOfWeek": "Tuesday",
+      "week": 10,
+      "month": 3,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 66,
+      "date": "2026-11-04",
+      "dayOfWeek": "Wednesday",
+      "week": 10,
+      "month": 3,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Add one client video testimonial or Reel embed to the site",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 67,
+      "date": "2026-11-05",
+      "dayOfWeek": "Thursday",
+      "week": 10,
+      "month": 3,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 68,
+      "date": "2026-11-06",
+      "dayOfWeek": "Friday",
+      "week": 10,
+      "month": 3,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 69,
+      "date": "2026-11-07",
+      "dayOfWeek": "Saturday",
+      "week": 10,
+      "month": 3,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 70,
+      "date": "2026-11-08",
+      "dayOfWeek": "Sunday",
+      "week": 10,
+      "month": 3,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 71,
+      "date": "2026-11-09",
+      "dayOfWeek": "Monday",
+      "week": 11,
+      "month": 3,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Review Month 2 dashboard data; re-check the keyword map against real Search Console queries",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 72,
+      "date": "2026-11-10",
+      "dayOfWeek": "Tuesday",
+      "week": 11,
+      "month": 3,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 73,
+      "date": "2026-11-11",
+      "dayOfWeek": "Wednesday",
+      "week": 11,
+      "month": 3,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Submit the listing to JustDial and Sulekha",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 74,
+      "date": "2026-11-12",
+      "dayOfWeek": "Thursday",
+      "week": 11,
+      "month": 3,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 75,
+      "date": "2026-11-13",
+      "dayOfWeek": "Friday",
+      "week": 11,
+      "month": 3,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 76,
+      "date": "2026-11-14",
+      "dayOfWeek": "Saturday",
+      "week": 11,
+      "month": 3,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 77,
+      "date": "2026-11-15",
+      "dayOfWeek": "Sunday",
+      "week": 11,
+      "month": 3,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 78,
+      "date": "2026-11-16",
+      "dayOfWeek": "Monday",
+      "week": 12,
+      "month": 3,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Submit the listing to 3 more beauty/bridal local directories",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 79,
+      "date": "2026-11-17",
+      "dayOfWeek": "Tuesday",
+      "week": 12,
+      "month": 3,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 80,
+      "date": "2026-11-18",
+      "dayOfWeek": "Wednesday",
+      "week": 12,
+      "month": 3,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Outreach for local backlink #1 — a Chennai lifestyle blog",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 81,
+      "date": "2026-11-19",
+      "dayOfWeek": "Thursday",
+      "week": 12,
+      "month": 3,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 82,
+      "date": "2026-11-20",
+      "dayOfWeek": "Friday",
+      "week": 12,
+      "month": 3,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 83,
+      "date": "2026-11-21",
+      "dayOfWeek": "Saturday",
+      "week": 12,
+      "month": 3,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    },
+    {
+      "day": 84,
+      "date": "2026-11-22",
+      "dayOfWeek": "Sunday",
+      "week": 12,
+      "month": 3,
+      "open": true,
+      "theme": "Week Recap",
+      "tasks": [
+        "Post an Instagram feed post recapping the week's best transformation",
+        "Send review-request messages to remaining clients",
+        "Light engagement pass — reply to comments from the week"
+      ],
+      "automationNote": "Recap caption pre-drafted."
+    },
+    {
+      "day": 85,
+      "date": "2026-11-23",
+      "dayOfWeek": "Monday",
+      "week": 13,
+      "month": 3,
+      "open": false,
+      "theme": "Admin & Technical",
+      "tasks": [
+        "MILESTONE: Full 90-day review — Lighthouse trend, GBP Insights, Instagram Insights, Search Console query data",
+        "Review this week's automated Lighthouse trend on the dashboard",
+        "Queue this week's 2 Google Business Profile posts (draft ready from daily automation)",
+        "Reply to any pending GBP Q&A or Instagram DMs from the weekend"
+      ],
+      "automationNote": "Daily technical audit runs overnight; today's GBP post drafts are pre-written and ready to paste in."
+    },
+    {
+      "day": 86,
+      "date": "2026-11-24",
+      "dayOfWeek": "Tuesday",
+      "week": 13,
+      "month": 3,
+      "open": true,
+      "theme": "Content Capture",
+      "tasks": [
+        "Photograph or film one real service in progress (with client permission)",
+        "Post an Instagram Reel or carousel using today's capture (caption pre-drafted)"
+      ],
+      "automationNote": "Today's Instagram caption + hashtag set is pre-drafted and ready to paste in once you've picked the photo/clip."
+    },
+    {
+      "day": 87,
+      "date": "2026-11-25",
+      "dayOfWeek": "Wednesday",
+      "week": 13,
+      "month": 3,
+      "open": true,
+      "theme": "Engage & Request",
+      "tasks": [
+        "MILESTONE: Set the next 90-day plan based on what the real data shows",
+        "Reply to all Instagram comments/DMs from the last 48 hours",
+        "Send the WhatsApp review-request message to Tuesday's completed clients",
+        "Post an Instagram Story"
+      ],
+      "automationNote": "Review-request message and Story caption are pre-drafted."
+    },
+    {
+      "day": 88,
+      "date": "2026-11-26",
+      "dayOfWeek": "Thursday",
+      "week": 13,
+      "month": 3,
+      "open": true,
+      "theme": "GBP Push",
+      "tasks": [
+        "Publish today's Google Business Profile post",
+        "Cross-post the same content as an Instagram Story"
+      ],
+      "automationNote": "GBP post text is pre-drafted (rotates through the 5 templates from the GBP Content Pack)."
+    },
+    {
+      "day": 89,
+      "date": "2026-11-27",
+      "dayOfWeek": "Friday",
+      "week": 13,
+      "month": 3,
+      "open": true,
+      "theme": "Weekend-Prep Content",
+      "tasks": [
+        "Post an Instagram feed post highlighting a weekend-relevant service (bridal/party glam)",
+        "Send review-request messages to Wednesday/Thursday's clients"
+      ],
+      "automationNote": "Caption pre-drafted, weighted toward bridal/party content ahead of the weekend."
+    },
+    {
+      "day": 90,
+      "date": "2026-11-28",
+      "dayOfWeek": "Saturday",
+      "week": 13,
+      "month": 3,
+      "open": true,
+      "theme": "Peak-Day Capture",
+      "tasks": [
+        "Capture 2-3 more photos/clips — Saturday is typically the busiest day",
+        "Post an Instagram Story",
+        "Send review-request messages to Friday/Saturday's clients (highest volume day)"
+      ],
+      "automationNote": "Story caption pre-drafted; review-request message pre-filled."
+    }
+  ]
+}

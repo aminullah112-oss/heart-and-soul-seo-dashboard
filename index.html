@@ -126,6 +126,41 @@
   .month-row ul{ margin:0; padding-left:18px; }
   .month-row li{ font-size:13.5px; color:#4a4450; margin-bottom:5px; line-height:1.5; }
 
+  /* 90-day plan */
+  .today-card{
+    background:linear-gradient(160deg,#0c1712 0%,#16241c 60%,#3f6b4a 130%); color:#fff;
+    border-radius:12px; padding:30px 32px; display:grid; grid-template-columns:auto 1fr; gap:28px; align-items:center;
+  }
+  .today-badge{
+    text-align:center; background:rgba(255,255,255,0.08); border:1px solid var(--line); border-radius:10px;
+    padding:16px 22px; min-width:120px;
+  }
+  .today-badge .num{ font-family:'Playfair Display',serif; font-size:34px; line-height:1; }
+  .today-badge .of{ font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--sage-light); margin-top:4px; }
+  .today-info .date{ font-size:12.5px; color:var(--sage-light); letter-spacing:0.5px; margin-bottom:6px; }
+  .today-info h3{ font-family:'Playfair Display',serif; font-size:22px; color:#fff; margin-bottom:10px; }
+  .today-info ul{ margin:0; padding-left:18px; }
+  .today-info li{ font-size:13.5px; color:var(--blush); margin-bottom:5px; }
+  .today-info li.milestone{ color:#f3d57a; font-weight:500; }
+  @media (max-width: 700px){ .today-card{ grid-template-columns:1fr; } }
+
+  .plan-table-wrap{ margin-top:26px; max-height:520px; overflow-y:auto; border:1px solid #e7e1d8; border-radius:10px; background:#fff; }
+  table.plan-table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  table.plan-table th{
+    position:sticky; top:0; background:var(--midnight); color:#fff; text-align:left; padding:10px 14px;
+    font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; z-index:1;
+  }
+  table.plan-table td{ padding:10px 14px; border-bottom:1px solid #f0ece4; vertical-align:top; }
+  table.plan-table tr.closed td{ background:#f7f2ec; color:#a89e90; }
+  table.plan-table tr.today td{ background:#eef4ee; }
+  table.plan-table td.day-num{ font-variant-numeric:tabular-nums; color:#8a8478; }
+  table.plan-table td ul{ margin:0; padding-left:16px; }
+  table.plan-table td li{ margin-bottom:3px; }
+  table.plan-table td li.milestone{ color:var(--amber); font-weight:600; }
+  .plan-legend{ display:flex; gap:18px; margin-top:12px; font-size:11.5px; color:#8a8478; flex-wrap:wrap; }
+  .plan-legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .plan-legend .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+
   /* how it works */
   .how-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
   .how-card{ background:#fff; border:1px solid #e7e1d8; border-radius:10px; padding:22px; }
@@ -350,6 +385,37 @@
   </div>
 </section>
 
+<section id="daily-plan">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The First 90 Days</div>
+      <h2>Daily SEO Action Plan</h2>
+      <p>The first 3 months of the roadmap above, broken down into a specific action for every single day — mapped to the studio's real hours (closed Monday). A scheduled system drafts each day's ready-to-post text automatically; see the Automation tab in the companion workbook for exactly what runs itself.</p>
+    </div>
+
+    <div class="today-card" id="todayCard">
+      <div class="today-badge"><div class="num" id="dayNum">&mdash;</div><div class="of">of 90 days</div></div>
+      <div class="today-info">
+        <div class="date" id="todayDate">Loading&hellip;</div>
+        <h3 id="todayTheme"></h3>
+        <ul id="todayTasks"></ul>
+      </div>
+    </div>
+
+    <div class="plan-table-wrap">
+      <table class="plan-table" id="planTable">
+        <thead><tr><th>Day</th><th>Date</th><th>Weekday</th><th>Theme</th><th>Tasks</th></tr></thead>
+        <tbody id="planTableBody"></tbody>
+      </table>
+    </div>
+    <div class="plan-legend">
+      <span><span class="dot" style="background:#eef4ee; border:1px solid #cfe0d0;"></span>Today</span>
+      <span><span class="dot" style="background:#f7f2ec; border:1px solid #e2d8ca;"></span>Closed (Monday)</span>
+      <span><span class="dot" style="background:var(--amber);"></span>Milestone day</span>
+    </div>
+  </div>
+</section>
+
 <section id="how" style="background:#f4efe6;">
   <div class="wrap">
     <div class="section-head">
@@ -380,12 +446,55 @@
 
 <script>
 async function loadData() {
-  const [lhRes, bmRes] = await Promise.all([
+  const [lhRes, bmRes, planRes] = await Promise.all([
     fetch('data/lighthouse-history.json').then(r => r.json()).catch(() => null),
     fetch('data/business-metrics.json').then(r => r.json()).catch(() => null),
+    fetch('data/90-day-plan.json').then(r => r.json()).catch(() => null),
   ]);
   renderTechnical(lhRes);
   renderBusiness(bmRes);
+  renderDailyPlan(planRes);
+}
+
+function renderDailyPlan(plan) {
+  if (!plan || !plan.entries || !plan.entries.length) return;
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const entries = plan.entries;
+  let todayIdx = entries.findIndex(e => e.date === todayIso);
+  // Before the plan starts or after it ends, just point at day 1 / the last day rather than showing nothing
+  if (todayIdx === -1) todayIdx = todayIso < plan.startDate ? 0 : entries.length - 1;
+  const today = entries[todayIdx];
+
+  document.getElementById('dayNum').textContent = today.day;
+  document.getElementById('todayDate').textContent = fmtDate(today.date) + ' · ' + today.dayOfWeek + (today.open ? ' · Open' : ' · Closed') + ' · Week ' + today.week + ' · ' + plan.monthNames[today.month];
+  document.getElementById('todayTheme').textContent = today.theme;
+  const ul = document.getElementById('todayTasks');
+  ul.innerHTML = today.tasks.map(t => {
+    const isMilestone = t.startsWith('MILESTONE');
+    const text = isMilestone ? t.replace('MILESTONE: ', '') : t;
+    return `<li class="${isMilestone ? 'milestone' : ''}">${isMilestone ? '★ ' : ''}${text}</li>`;
+  }).join('');
+
+  const tbody = document.getElementById('planTableBody');
+  tbody.innerHTML = entries.map(e => {
+    const rowClass = [!e.open ? 'closed' : '', e.date === todayIso ? 'today' : ''].filter(Boolean).join(' ');
+    const tasksHtml = e.tasks.map(t => {
+      const isMilestone = t.startsWith('MILESTONE');
+      const text = isMilestone ? t.replace('MILESTONE: ', '') : t;
+      return `<li class="${isMilestone ? 'milestone' : ''}">${text}</li>`;
+    }).join('');
+    return `<tr class="${rowClass}">
+      <td class="day-num">${e.day}</td>
+      <td>${fmtDate(e.date)}</td>
+      <td>${e.dayOfWeek}${e.open ? '' : ' (closed)'}</td>
+      <td>${e.theme}</td>
+      <td><ul>${tasksHtml}</ul></td>
+    </tr>`;
+  }).join('');
+
+  // scroll the table so "today" is in view once rendered
+  const todayRow = tbody.querySelector('tr.today');
+  if (todayRow) todayRow.scrollIntoView({ block: 'center' });
 }
 
 function fmtDate(iso) {
