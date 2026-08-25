@@ -1,0 +1,42 @@
+name: Weekly SEO Audit
+
+on:
+  schedule:
+    # Every Monday 03:00 UTC (~08:30 IST)
+    - cron: "0 3 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Lighthouse
+        run: npm install -g lighthouse
+
+      - name: Run Lighthouse against the live landing page
+        run: |
+          lighthouse https://aminullah112-oss.github.io/heart-and-soul-hair-studio-landing/ \
+            --output=json --output-path=./lh-result.json \
+            --chrome-flags="--headless=new --no-sandbox --disable-gpu" \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --quiet
+
+      - name: Append result to history
+        run: node scripts/append-lighthouse.js
+
+      - name: Commit updated history
+        run: |
+          git config user.name "seo-audit-bot"
+          git config user.email "actions@github.com"
+          git add data/lighthouse-history.json
+          git diff --cached --quiet && echo "No changes to commit" || git commit -m "Weekly SEO audit $(date -u +'%Y-%m-%d')"
+          git push

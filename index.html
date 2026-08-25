@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart &amp; Soul Hair Studio | SEO Performance Dashboard</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230c1712'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='28' font-weight='700' fill='%236fae7f' text-anchor='middle'%3EH%26S%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --midnight:#0c1712;
+    --midnight-2:#16241c;
+    --sage:#6fae7f;
+    --sage-light:#c3e6c9;
+    --sage-dim:#3f6b4a;
+    --ink-on-sage:#10241a;
+    --blush:#e9d2cb;
+    --cream:#faf5ee;
+    --ink:#1b241d;
+    --ink-60:#5f6b62;
+    --line: rgba(111,174,127,0.28);
+    --amber:#c9a227;
+    --rose:#c2607a;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--cream); color:var(--ink);
+    font-family:'Poppins',Arial,sans-serif; font-weight:300;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+  img{max-width:100%;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 32px;}
+  h1,h2,h3{ font-family:'Playfair Display',Georgia,serif; font-weight:600; margin:0; text-wrap:balance; }
+  p{ line-height:1.7; margin:0 0 10px 0; }
+  .eyebrow{
+    font-size:11.5px; letter-spacing:3px; text-transform:uppercase; color:var(--sage-dim);
+    font-weight:600; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background:var(--sage-dim); }
+
+  header{ background:var(--midnight); color:var(--cream); padding:0; }
+  nav.wrap{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+  .logo{ display:flex; flex-direction:column; line-height:1; font-family:'Playfair Display',serif; }
+  .logo b{ font-size:21px; }
+  .logo span{ font-size:9.5px; letter-spacing:3px; color:var(--sage-light); text-transform:uppercase; margin-top:3px; font-family:'Poppins',sans-serif; }
+  .navlinks{ display:flex; gap:26px; }
+  .navlinks a{ font-size:13px; text-decoration:none; color:var(--blush); }
+  .navlinks a:hover{ color:var(--sage-light); }
+
+  .hero{ background:linear-gradient(160deg,#0c1712 0%,#16241c 60%,#3f6b4a 130%); color:#fff; padding:56px 0 64px; }
+  .hero h1{ font-size:clamp(28px,3.6vw,42px); color:#fff; }
+  .hero p.lead{ max-width:640px; color:var(--blush); font-size:15px; margin-top:14px; }
+  .hero .updated{ font-size:12px; color:var(--sage-light); margin-top:18px; letter-spacing:0.3px; }
+
+  section{ padding:56px 0; }
+  .section-head{ margin-bottom:32px; }
+  .section-head h2{ font-size:clamp(24px,3vw,32px); margin-top:12px; }
+  .section-head p{ max-width:620px; color:#5b5462; font-size:14px; margin-top:8px; }
+
+  /* KPI cards */
+  .kpi-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:8px; }
+  .kpi-card{
+    background:#fff; border:1px solid #e7e1d8; border-radius:10px; padding:22px 20px;
+    box-shadow:0 6px 18px rgba(27,36,29,0.05);
+  }
+  .kpi-card .label{ font-size:11px; letter-spacing:1px; text-transform:uppercase; color:#8a8478; font-weight:600; }
+  .kpi-card .value{ font-family:'Playfair Display',serif; font-size:36px; margin-top:8px; color:var(--ink); }
+  .kpi-card .value.good{ color:var(--sage-dim); }
+  .kpi-card .value.warn{ color:var(--amber); }
+  .kpi-card .delta{ font-size:12px; margin-top:6px; color:#8a8478; }
+  .kpi-card .delta.up{ color:#2f8a4f; }
+  .kpi-card .delta.down{ color:var(--rose); }
+
+  @media (max-width: 900px){ .kpi-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  /* chart card */
+  .chart-card{
+    background:#fff; border:1px solid #e7e1d8; border-radius:10px; padding:26px 26px 14px; margin-top:24px;
+    box-shadow:0 6px 18px rgba(27,36,29,0.05);
+  }
+  .chart-card h3{ font-size:15px; margin-bottom:16px; color:var(--ink); }
+  .chart-wrap{ position:relative; height:280px; }
+  .chart-grid{ display:grid; grid-template-columns:2fr 1fr; gap:24px; align-items:start; }
+  @media (max-width: 900px){ .chart-grid{ grid-template-columns:1fr; } }
+
+  /* empty state */
+  .empty-state{
+    background:#fff; border:1px dashed #cfc6ba; border-radius:10px; padding:34px 30px; text-align:center;
+    color:#6b6577; font-size:13.5px;
+  }
+  .empty-state b{ display:block; color:var(--ink); font-size:15px; margin-bottom:8px; font-family:'Playfair Display',serif; }
+
+  /* metrics category cards */
+  .metric-cats{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:20px; }
+  .metric-cat{ background:#fff; border:1px solid #e7e1d8; border-radius:10px; padding:20px; }
+  .metric-cat h4{ font-size:12.5px; text-transform:uppercase; letter-spacing:1px; color:var(--sage-dim); margin:0 0 12px; font-weight:700; }
+  .metric-cat .row{ display:flex; justify-content:space-between; font-size:13px; padding:6px 0; border-bottom:1px solid #f0ece4; }
+  .metric-cat .row:last-child{ border-bottom:none; }
+  .metric-cat .row span:last-child{ color:#8a8478; font-variant-numeric:tabular-nums; }
+  @media (max-width: 900px){ .metric-cats{ grid-template-columns:1fr; } }
+
+  /* roadmap */
+  .roadmap-tabs{ display:flex; gap:10px; margin-bottom:24px; }
+  .roadmap-tab{
+    padding:10px 18px; border-radius:999px; border:1px solid #d8d0c4; background:#fff; font-size:13px; cursor:pointer;
+    font-family:'Poppins',sans-serif; color:#6b6577;
+  }
+  .roadmap-tab.active{ background:var(--sage-dim); color:#fff; border-color:var(--sage-dim); }
+  .roadmap-track{ display:none; }
+  .roadmap-track.active{ display:block; }
+  .month-row{ display:grid; grid-template-columns:120px 1fr; gap:20px; padding:20px 0; border-bottom:1px solid #e7e1d8; }
+  .month-row:last-child{ border-bottom:none; }
+  .month-badge{
+    font-family:'Playfair Display',serif; font-size:15px; color:#fff; background:var(--sage-dim);
+    border-radius:8px; height:44px; display:flex; align-items:center; justify-content:center; text-align:center;
+  }
+  .month-row h4{ font-family:'Playfair Display',serif; font-size:16.5px; color:var(--ink); margin:0 0 8px; }
+  .month-row ul{ margin:0; padding-left:18px; }
+  .month-row li{ font-size:13.5px; color:#4a4450; margin-bottom:5px; line-height:1.5; }
+
+  /* how it works */
+  .how-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .how-card{ background:#fff; border:1px solid #e7e1d8; border-radius:10px; padding:22px; }
+  .how-card .tag{ display:inline-block; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:999px; margin-bottom:12px; font-weight:700; }
+  .how-card.auto .tag{ background:#e3eee5; color:var(--sage-dim); }
+  .how-card.manual .tag{ background:#f6ecd8; color:var(--amber); }
+  .how-card h4{ font-family:'Playfair Display',serif; font-size:16px; margin:0 0 8px; }
+  .how-card p{ font-size:13px; color:#5b5462; }
+  @media (max-width: 900px){ .how-grid{ grid-template-columns:1fr; } }
+
+  footer{ background:var(--midnight); color:var(--blush); padding:36px 0; font-size:12.5px; }
+  footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  footer a{ color:var(--sage-light); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo"><b>H&amp;S</b><span>SEO Dashboard</span></div>
+    <div class="navlinks">
+      <a href="https://aminullah112-oss.github.io/heart-and-soul-hair-studio-landing/" target="_blank" rel="noopener">Live Landing Page &rarr;</a>
+      <a href="https://www.instagram.com/h_and_s_hairstudio" target="_blank" rel="noopener">Instagram &rarr;</a>
+      <a href="https://github.com/aminullah112-oss/heart-and-soul-seo-dashboard" target="_blank" rel="noopener">Source &rarr;</a>
+    </div>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--sage-light);">SEO Performance Dashboard</div>
+    <h1 style="margin-top:14px;">Heart &amp; Soul Hair Studio &mdash; tracking, not guessing.</h1>
+    <p class="lead">Technical SEO health is measured automatically every week against the live landing page. Business metrics (Google Business Profile, Instagram, Search Console) are entered weekly from each platform's own Insights &mdash; there's no public API for any of them without the studio's account access, so this is by design, not a shortcut.</p>
+    <div class="updated" id="lastUpdated">Loading latest audit&hellip;</div>
+  </div>
+</div>
+
+<section id="technical">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Automated &middot; Weekly</div>
+      <h2>Technical SEO Health</h2>
+      <p>Lighthouse audit against the live site, run automatically every Monday by GitHub Actions. Scores out of 100.</p>
+    </div>
+
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card"><div class="label">Performance</div><div class="value" id="kpiPerf">&mdash;</div><div class="delta" id="kpiPerfDelta"></div></div>
+      <div class="kpi-card"><div class="label">Accessibility</div><div class="value" id="kpiA11y">&mdash;</div><div class="delta" id="kpiA11yDelta"></div></div>
+      <div class="kpi-card"><div class="label">Best Practices</div><div class="value" id="kpiBP">&mdash;</div><div class="delta" id="kpiBPDelta"></div></div>
+      <div class="kpi-card"><div class="label">SEO</div><div class="value" id="kpiSEO">&mdash;</div><div class="delta" id="kpiSEODelta"></div></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Lighthouse scores over time</h3>
+        <div class="chart-wrap"><canvas id="scoresChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Core Web Vitals (latest)</h3>
+        <div class="chart-wrap" style="height:280px;"><canvas id="cwvChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="business" style="background:#f4efe6;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Manual &middot; Weekly</div>
+      <h2>Business Metrics</h2>
+      <p>Pulled from Google Business Profile Insights, Instagram Insights, and Google Search Console once the studio connects those accounts.</p>
+    </div>
+    <div id="businessMetrics"></div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The Plan</div>
+      <h2>6-Month Roadmap</h2>
+      <p>Two parallel tracks &mdash; the website's technical/content SEO, and Instagram's organic growth &mdash; reviewed and adjusted monthly against what the data above actually shows.</p>
+    </div>
+
+    <div class="roadmap-tabs">
+      <button class="roadmap-tab active" data-track="landing">Landing Page</button>
+      <button class="roadmap-tab" data-track="instagram">Instagram</button>
+    </div>
+
+    <div class="roadmap-track active" id="track-landing">
+      <div class="month-row">
+        <div class="month-badge">Month 1</div>
+        <div>
+          <h4>Foundation</h4>
+          <ul>
+            <li>Claim &amp; verify Google Business Profile; complete every field (see GBP Content Pack)</li>
+            <li>Connect Google Search Console to the live domain so rankings become measurable</li>
+            <li>Replace placeholder address/phone with real details across site schema, GBP, and Instagram bio for NAP consistency</li>
+            <li>Start the WhatsApp review-request flow for every completed appointment</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 2</div>
+        <div>
+          <h4>Content Depth</h4>
+          <ul>
+            <li>Publish first 2 blog posts from the content calendar (keratin cost, bridal trial prep)</li>
+            <li>Add a dedicated bridal portfolio/gallery once real client photos are available</li>
+            <li>Expand the FAQ with 3 real questions pulled from actual customer WhatsApp/DM queries</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 3</div>
+        <div>
+          <h4>Local Citations</h4>
+          <ul>
+            <li>Submit the listing to 15&ndash;20 Indian local directories (JustDial, Sulekha, beauty/bridal directories)</li>
+            <li>Pursue 2&ndash;3 local backlinks &mdash; Chennai lifestyle blogs, wedding vendor directories for the Bridal Edit package</li>
+            <li>Re-check the keyword map against early Search Console query data and adjust priorities</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 4</div>
+        <div>
+          <h4>Conversion &amp; Real Content</h4>
+          <ul>
+            <li>Swap remaining stock photography for real studio/client photos (with permission)</li>
+            <li>Review the Core Web Vitals trend from the dashboard above and address any regressions</li>
+            <li>Add a short client video testimonial or Reel embed if available</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 5</div>
+        <div>
+          <h4>Content Scaling</h4>
+          <ul>
+            <li>Publish 2 more blog posts (balayage vs. highlights, hair colour for Indian skin tones)</li>
+            <li>Add real <code>AggregateRating</code> schema once genuine Google reviews have accumulated &mdash; never before</li>
+            <li>Refresh service pricing on-page if anything has changed</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 6</div>
+        <div>
+          <h4>Review &amp; Re-plan</h4>
+          <ul>
+            <li>Full 6-month trend review across this dashboard's Lighthouse and business-metrics history</li>
+            <li>Mine Search Console query data for keyword opportunities the original map missed</li>
+            <li>Set the next 6-month plan based on what the real data shows, not on assumptions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-track" id="track-instagram">
+      <div class="month-row">
+        <div class="month-badge">Month 1</div>
+        <div>
+          <h4>Audit &amp; Bio</h4>
+          <ul>
+            <li>Rewrite bio with service keywords + Chennai location + booking link to the live site</li>
+            <li>Geo-tag every post going forward; organize Highlights (Hair, Bridal, Skin, Reviews, Pricing)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 2</div>
+        <div>
+          <h4>Consistency</h4>
+          <ul>
+            <li>Establish a steady posting cadence (4&ndash;5 posts/week: mix of Reels, before/after, carousel tips)</li>
+            <li>Standardize captions with service + neighbourhood keywords, written naturally</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 3</div>
+        <div>
+          <h4>Reels Push</h4>
+          <ul>
+            <li>Prioritise 2&ndash;3 Reels/week &mdash; transformations, quick tips, behind-the-scenes</li>
+            <li>Track which formats actually drive reach in Instagram Insights, not assumptions</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 4</div>
+        <div>
+          <h4>UGC &amp; Collaborations</h4>
+          <ul>
+            <li>Encourage client tagging/reposts (with permission) for social proof</li>
+            <li>Partner with 1&ndash;2 micro-influencers or bridal vendors (photographers, decorators) for cross-promotion</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 5</div>
+        <div>
+          <h4>Paid Test</h4>
+          <ul>
+            <li>Small-budget Meta ad test, geo-targeted to nearby Chennai neighbourhoods, promoting the Bridal Edit package</li>
+            <li>Measure against organic baseline before committing more budget</li>
+          </ul>
+        </div>
+      </div>
+      <div class="month-row">
+        <div class="month-badge">Month 6</div>
+        <div>
+          <h4>Review &amp; Scale</h4>
+          <ul>
+            <li>Analyse 6 months of Insights &mdash; reach, follower growth, best-performing content types</li>
+            <li>Double down on what worked; set content pillars for the next 6 months</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="background:#f4efe6;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Transparency</div>
+      <h2>How This Dashboard Updates</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-card auto">
+        <div class="tag">Automated</div>
+        <h4>Technical SEO scores</h4>
+        <p>A GitHub Action runs every Monday, audits the live landing page with Lighthouse, and commits the result to this repo &mdash; no one has to remember to do it, and the numbers can't be quietly cherry-picked.</p>
+      </div>
+      <div class="how-card manual">
+        <div class="tag">Manual, weekly</div>
+        <h4>Business metrics</h4>
+        <p>Google Business Profile, Instagram, and Search Console don't expose free public APIs for this &mdash; each requires the studio's own account access. These numbers are entered by hand each week from each platform's native Insights screen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Heart &amp; Soul Hair Studio &mdash; SEO Dashboard</span>
+    <span>Data updates weekly &middot; <a href="https://github.com/aminullah112-oss/heart-and-soul-seo-dashboard" target="_blank" rel="noopener">View source on GitHub</a></span>
+  </div>
+</footer>
+
+<script>
+async function loadData() {
+  const [lhRes, bmRes] = await Promise.all([
+    fetch('data/lighthouse-history.json').then(r => r.json()).catch(() => null),
+    fetch('data/business-metrics.json').then(r => r.json()).catch(() => null),
+  ]);
+  renderTechnical(lhRes);
+  renderBusiness(bmRes);
+}
+
+function fmtDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function deltaEl(el, curr, prev) {
+  if (prev === undefined || prev === null) { el.textContent = 'First recorded audit'; return; }
+  const diff = curr - prev;
+  if (diff === 0) { el.textContent = 'No change vs last week'; return; }
+  el.textContent = (diff > 0 ? '+' : '') + diff + ' vs last week';
+  el.className = 'delta ' + (diff > 0 ? 'up' : 'down');
+}
+
+function renderTechnical(data) {
+  if (!data || !data.entries || !data.entries.length) {
+    document.getElementById('lastUpdated').textContent = 'No audits recorded yet.';
+    return;
+  }
+  const entries = data.entries;
+  const latest = entries[entries.length - 1];
+  const prev = entries.length > 1 ? entries[entries.length - 2] : null;
+
+  document.getElementById('lastUpdated').textContent = 'Last technical audit: ' + fmtDate(latest.date) + ' — ' + entries.length + ' audit' + (entries.length === 1 ? '' : 's') + ' recorded';
+
+  document.getElementById('kpiPerf').textContent = latest.performance;
+  document.getElementById('kpiA11y').textContent = latest.accessibility;
+  document.getElementById('kpiBP').textContent = latest.bestPractices;
+  document.getElementById('kpiSEO').textContent = latest.seo;
+  deltaEl(document.getElementById('kpiPerfDelta'), latest.performance, prev && prev.performance);
+  deltaEl(document.getElementById('kpiA11yDelta'), latest.accessibility, prev && prev.accessibility);
+  deltaEl(document.getElementById('kpiBPDelta'), latest.bestPractices, prev && prev.bestPractices);
+  deltaEl(document.getElementById('kpiSEODelta'), latest.seo, prev && prev.seo);
+
+  const labels = entries.map(e => fmtDate(e.date));
+  new Chart(document.getElementById('scoresChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Performance', data: entries.map(e => e.performance), borderColor: '#c9a227', backgroundColor: 'transparent', tension: 0.3 },
+        { label: 'Accessibility', data: entries.map(e => e.accessibility), borderColor: '#3f6b4a', backgroundColor: 'transparent', tension: 0.3 },
+        { label: 'Best Practices', data: entries.map(e => e.bestPractices), borderColor: '#6fae7f', backgroundColor: 'transparent', tension: 0.3 },
+        { label: 'SEO', data: entries.map(e => e.seo), borderColor: '#c2607a', backgroundColor: 'transparent', tension: 0.3 },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { y: { min: 0, max: 100, ticks: { stepSize: 20 } } },
+      plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+    },
+  });
+
+  new Chart(document.getElementById('cwvChart'), {
+    type: 'bar',
+    data: {
+      labels: ['LCP (s)', 'CLS', 'TBT (ms ÷100)'],
+      datasets: [{
+        label: 'Latest',
+        data: [latest.lcp, latest.cls, latest.tbt / 100],
+        backgroundColor: ['#c9a227', '#c2607a', '#3f6b4a'],
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+    },
+  });
+}
+
+function renderBusiness(data) {
+  const el = document.getElementById('businessMetrics');
+  if (!data || !data.entries || !data.entries.length) {
+    el.innerHTML = '<div class="empty-state"><b>No business metrics recorded yet</b>Once Google Business Profile is verified and Instagram/Search Console access is connected, weekly numbers will appear here — profile views, calls, direction requests, reviews, follower growth, reach, and search impressions/clicks.</div>';
+    return;
+  }
+  const latest = data.entries[data.entries.length - 1];
+  el.innerHTML = `
+    <div class="metric-cats">
+      <div class="metric-cat">
+        <h4>Google Business Profile</h4>
+        <div class="row"><span>Profile views</span><span>${latest.gbp_views ?? '—'}</span></div>
+        <div class="row"><span>Calls</span><span>${latest.gbp_calls ?? '—'}</span></div>
+        <div class="row"><span>Direction requests</span><span>${latest.gbp_directionRequests ?? '—'}</span></div>
+        <div class="row"><span>Review count</span><span>${latest.gbp_reviewCount ?? '—'}</span></div>
+        <div class="row"><span>Average rating</span><span>${latest.gbp_avgRating ?? '—'}</span></div>
+      </div>
+      <div class="metric-cat">
+        <h4>Instagram</h4>
+        <div class="row"><span>Followers</span><span>${latest.ig_followers ?? '—'}</span></div>
+        <div class="row"><span>Weekly reach</span><span>${latest.ig_reach ?? '—'}</span></div>
+        <div class="row"><span>Weekly engagement</span><span>${latest.ig_engagement ?? '—'}</span></div>
+      </div>
+      <div class="metric-cat">
+        <h4>Google Search Console</h4>
+        <div class="row"><span>Impressions</span><span>${latest.gsc_impressions ?? '—'}</span></div>
+        <div class="row"><span>Clicks</span><span>${latest.gsc_clicks ?? '—'}</span></div>
+        <div class="row"><span>Avg. position</span><span>${latest.gsc_avgPosition ?? '—'}</span></div>
+      </div>
+    </div>
+  `;
+}
+
+document.querySelectorAll('.roadmap-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.roadmap-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.roadmap-track').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('track-' + btn.dataset.track).classList.add('active');
+  });
+});
+
+loadData();
+</script>
+</body>
+</html>

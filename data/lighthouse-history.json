@@ -1,0 +1,16 @@
+{
+  "url": "https://aminullah112-oss.github.io/heart-and-soul-hair-studio-landing/",
+  "entries": [
+    {
+      "date": "2026-08-25",
+      "performance": 94,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcp": 2.45,
+      "cls": 0.023,
+      "tbt": 0,
+      "note": "Baseline audit. Two real issues were found and fixed same day before this reading: footer text contrast (4.27:1, needed 4.5:1) and non-sequential heading order (h2→h4 skip) — both are why Accessibility reads 100. A third finding, layout shift from web-font loading on the hero heading, was mitigated by reserving layout space."
+    }
+  ]
+}
