@@ -45,6 +45,8 @@ data/business-metrics.json        hand-updated weekly (see schema in the file)
 data/90-day-plan.json             the full 90-day day-by-day plan (2026-08-31 to 2026-11-28)
 scripts/append-lighthouse.js      used by the Action to append a new audit entry
 .github/workflows/daily-audit.yml
+docs/public-apis-reference.md     free public APIs worth checking before building a new integration
+docs/public-apis-full.md          full catalog backing that reference
 ```
 
 ## Adding a week of business metrics
