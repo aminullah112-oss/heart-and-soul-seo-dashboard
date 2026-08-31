@@ -1,0 +1,27 @@
+[
+  {
+    "id": "stylist-any",
+    "name": "No preference",
+    "title": "First available stylist",
+    "specialties": [],
+    "isAnyStylist": true
+  },
+  {
+    "id": "stylist-maria",
+    "name": "Maria Santos",
+    "title": "Owner & Master Stylist",
+    "specialties": ["Balayage", "Color correction", "Cuts"]
+  },
+  {
+    "id": "stylist-jade",
+    "name": "Jade Kim",
+    "title": "Senior Stylist",
+    "specialties": ["Cuts", "Styling", "Updos"]
+  },
+  {
+    "id": "stylist-devon",
+    "name": "Devon Price",
+    "title": "Colorist",
+    "specialties": ["Full color", "Root touch-up", "Treatments"]
+  }
+]

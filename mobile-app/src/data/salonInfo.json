@@ -1,0 +1,19 @@
+{
+  "name": "Heart & Soul Hair Studio",
+  "tagline": "Where every visit feels like coming home",
+  "phone": "+1 (555) 010-2468",
+  "email": "hello@heartandsoulhairstudio.com",
+  "address": "128 Willowbrook Lane, Riverside, CA 92501",
+  "mapsUrl": "https://maps.google.com/?q=128+Willowbrook+Lane+Riverside+CA+92501",
+  "instagramUrl": "https://instagram.com/heartandsoulhairstudio",
+  "website": "https://aminullah112-oss.github.io/heart-and-soul-hair-studio-landing/",
+  "hours": [
+    { "day": "Monday", "open": null, "close": null, "closed": true },
+    { "day": "Tuesday", "open": "09:00", "close": "18:00", "closed": false },
+    { "day": "Wednesday", "open": "09:00", "close": "18:00", "closed": false },
+    { "day": "Thursday", "open": "09:00", "close": "20:00", "closed": false },
+    { "day": "Friday", "open": "09:00", "close": "20:00", "closed": false },
+    { "day": "Saturday", "open": "08:00", "close": "17:00", "closed": false },
+    { "day": "Sunday", "open": null, "close": null, "closed": true }
+  ]
+}

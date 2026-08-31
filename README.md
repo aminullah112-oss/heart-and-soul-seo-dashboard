@@ -6,6 +6,11 @@ A separate, small system that tracks SEO performance for the
 [Heart & Soul Hair Studio landing page](https://aminullah112-oss.github.io/heart-and-soul-hair-studio-landing/),
 runs a specific 90-day daily action plan, and reports on progress automatically.
 
+This repo also holds `mobile-app/`, the studio's booking app for iOS/Android
+— see [`mobile-app/README.md`](mobile-app/README.md) for how to run it and
+ship it to the App Store / Play Store. It's a separate concern from the SEO
+dashboard above; the two just happen to live in one repo.
+
 ## What updates automatically
 
 - **`.github/workflows/daily-audit.yml`** runs every day at 03:00 UTC (and can be triggered

@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Heart & Soul Booking",
+    "slug": "heart-and-soul-booking",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "heartandsoulbooking",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#faf5ee",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.heartandsoulhairstudio.booking"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0c1712",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.heartandsoulhairstudio.booking",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-font"
+    ]
+  }
+}

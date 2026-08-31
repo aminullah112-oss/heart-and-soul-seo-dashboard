@@ -1,0 +1,82 @@
+[
+  {
+    "id": "svc-cut-womens",
+    "category": "Cuts",
+    "name": "Women's Haircut & Style",
+    "description": "Consultation, precision cut, and a blowout finish tailored to your face shape.",
+    "durationMinutes": 60,
+    "price": 65
+  },
+  {
+    "id": "svc-cut-mens",
+    "category": "Cuts",
+    "name": "Men's Haircut",
+    "description": "Classic or modern cut with a hot towel finish.",
+    "durationMinutes": 30,
+    "price": 35
+  },
+  {
+    "id": "svc-cut-kids",
+    "category": "Cuts",
+    "name": "Kids Haircut (12 & under)",
+    "description": "A relaxed, patient cut for our youngest guests.",
+    "durationMinutes": 30,
+    "price": 25
+  },
+  {
+    "id": "svc-color-full",
+    "category": "Color",
+    "name": "Full Color",
+    "description": "All-over single-process color using ammonia-free formulas.",
+    "durationMinutes": 90,
+    "price": 110
+  },
+  {
+    "id": "svc-color-balayage",
+    "category": "Color",
+    "name": "Balayage",
+    "description": "Hand-painted, dimensional highlights with a soft grow-out.",
+    "durationMinutes": 150,
+    "price": 195
+  },
+  {
+    "id": "svc-color-root",
+    "category": "Color",
+    "name": "Root Touch-Up",
+    "description": "Targeted root color to match your existing shade.",
+    "durationMinutes": 60,
+    "price": 75
+  },
+  {
+    "id": "svc-style-blowout",
+    "category": "Styling",
+    "name": "Blowout",
+    "description": "Wash, blow-dry, and finishing style — no cut or color.",
+    "durationMinutes": 45,
+    "price": 45
+  },
+  {
+    "id": "svc-style-updo",
+    "category": "Styling",
+    "name": "Special Occasion Updo",
+    "description": "Long-lasting styling for weddings, proms, and events.",
+    "durationMinutes": 75,
+    "price": 95
+  },
+  {
+    "id": "svc-treat-deep",
+    "category": "Treatments",
+    "name": "Deep Conditioning Treatment",
+    "description": "Intensive moisture and repair treatment for damaged or dry hair.",
+    "durationMinutes": 30,
+    "price": 40
+  },
+  {
+    "id": "svc-treat-scalp",
+    "category": "Treatments",
+    "name": "Scalp Therapy",
+    "description": "A relaxing scalp massage and exfoliating treatment.",
+    "durationMinutes": 30,
+    "price": 45
+  }
+]
