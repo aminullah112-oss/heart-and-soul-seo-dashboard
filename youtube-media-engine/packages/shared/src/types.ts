@@ -280,3 +280,131 @@ export interface CostEntry {
   unitLabel: string;
   detail?: Record<string, unknown>;
 }
+
+// ── Agent output schemas ──────────────────────────────────────────────────
+// Every LLM call that returns structure parses against one of these. They live
+// in @yme/shared rather than @yme/agents so the mock provider can satisfy them
+// without @yme/ai depending on @yme/agents.
+
+export const PillarSchema = z.enum([
+  'BUSINESS_CASE_STUDY',
+  'AI_BUSINESS',
+  'AI_AUTOMATION_SAAS',
+  'BUSINESS_FAILURE',
+  'FUTURE_OF_BUSINESS',
+]);
+export type Pillar = z.infer<typeof PillarSchema>;
+
+export const TopicCandidateSchema = z.object({
+  title: z.string().min(8).max(120),
+  angle: z.string().min(20),
+  pillar: PillarSchema,
+  /** The mechanism that makes this worth a video, not "it is trending". */
+  discoverySignal: z.string().min(15),
+  rationale: z.string().min(20),
+  entityNames: z.array(z.string().min(2)).min(1),
+});
+export type TopicCandidate = z.infer<typeof TopicCandidateSchema>;
+
+export const TopicCandidateListSchema = z.object({ topics: z.array(TopicCandidateSchema).min(1).max(12) });
+
+export const TopicScoringSchema = z.object({
+  viralPotential: z.number().min(0).max(100),
+  searchDemand: z.number().min(0).max(100),
+  advertiserValue: z.number().min(0).max(100),
+  evergreenValue: z.number().min(0).max(100),
+  storyPotential: z.number().min(0).max(100),
+  timeliness: z.number().min(0).max(100),
+  competition: z.number().min(0).max(100),
+  researchAvailability: z.number().min(0).max(100),
+  visualPotential: z.number().min(0).max(100),
+  affiliatePotential: z.number().min(0).max(100),
+  sponsorshipPotential: z.number().min(0).max(100),
+  channelRelevance: z.number().min(0).max(100),
+  reasoning: z.string().min(20),
+});
+export type TopicScoring = z.infer<typeof TopicScoringSchema>;
+
+export const ResearchPlanSchema = z.object({
+  question: z.string().min(10),
+  queries: z.array(z.string().min(3)).min(3).max(12),
+  /** What kind of document would settle the question — steers source ranking. */
+  primarySourceTargets: z.array(z.string().min(3)).min(1),
+});
+export type ResearchPlan = z.infer<typeof ResearchPlanSchema>;
+
+export const SourceAssessmentSchema = z.object({
+  tier: SourceTierSchema,
+  reliability: z.number().min(0).max(100),
+  relevance: z.number().min(0).max(100),
+  reason: z.string().min(5),
+});
+export type SourceAssessment = z.infer<typeof SourceAssessmentSchema>;
+
+export const ClaimExtractionSchema = z.object({
+  claims: z.array(ClaimSchema).max(60),
+  /** 0-100: how much of the question the gathered sources actually answer. */
+  coverageScore: z.number().min(0).max(100),
+  gaps: z.array(z.string()),
+});
+export type ClaimExtraction = z.infer<typeof ClaimExtractionSchema>;
+
+export const TitleSetSchema = z.object({ titles: z.array(TitleCandidateSchema).min(3).max(15) });
+export const ThumbnailSetSchema = z.object({ concepts: z.array(ThumbnailConceptSchema).min(3).max(12) });
+export const ShortSetSchema = z.object({ shorts: z.array(ShortSchema).min(1).max(5) });
+
+export const QcReviewSchema = z.object({
+  scriptQuality: z.number().min(0).max(100),
+  originality: z.number().min(0).max(100),
+  visualQuality: z.number().min(0).max(100),
+  monetizationSafety: z.number().min(0).max(100),
+  policy: z.enum(['PASS', 'WARNING', 'FAIL']),
+  aiDisclosure: z.enum(['PASS', 'WARNING']),
+  notes: z.array(z.string()),
+});
+export type QcReview = z.infer<typeof QcReviewSchema>;
+
+export const EntityExtractionSchema = z.object({
+  entities: z
+    .array(
+      z.object({
+        name: z.string().min(2),
+        kind: z.enum(['COMPANY', 'PERSON', 'PRODUCT', 'INDUSTRY', 'TECHNOLOGY', 'BUSINESS_MODEL', 'MARKET']),
+        summary: z.string().optional(),
+      }),
+    )
+    .max(40),
+  relationships: z
+    .array(z.object({ from: z.string(), to: z.string(), relation: z.string(), strength: z.number().min(0).max(1) }))
+    .max(60),
+});
+export type EntityExtraction = z.infer<typeof EntityExtractionSchema>;
+
+export const FollowupSetSchema = z.object({
+  followups: z.array(z.object({ title: z.string().min(8), angle: z.string().min(15), whyNow: z.string().min(10) })).max(8),
+});
+
+export const LearningReportSchema = z.object({
+  summary: z.string().min(30),
+  /** Patterns with enough supporting videos to act on. */
+  findings: z.array(
+    z.object({
+      pattern: z.string().min(10),
+      evidence: z.string().min(10),
+      sampleSize: z.number().int().min(0),
+      recommendation: z.string().min(10),
+    }),
+  ),
+  /** Patterns that are suggestive but under-powered. Never acted on automatically. */
+  provisional: z.array(
+    z.object({ pattern: z.string().min(10), sampleSize: z.number().int().min(0), whyUnderpowered: z.string() }),
+  ),
+});
+export type LearningReport = z.infer<typeof LearningReportSchema>;
+
+export const SponsorFitSchema = z.object({
+  fitScore: z.number().min(0).max(100),
+  rationale: z.string().min(15),
+  audienceMatch: z.string().min(10),
+  risks: z.array(z.string()),
+});
