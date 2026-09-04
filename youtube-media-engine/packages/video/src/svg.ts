@@ -25,7 +25,7 @@ export function estimateTextWidth(text: string, fontSize: number, weight: 'norma
   // Wide and narrow characters differ enough to be worth correcting for.
   let units = 0;
   for (const ch of text) {
-    if (/[ilj'.,:;|!\[\]]/.test(ch)) units += 0.42;
+    if (/[ilj'.,:;|![\]]/.test(ch)) units += 0.42;
     else if (/[A-Z0-9@#%&WM]/.test(ch)) units += 1.15;
     else units += 1;
   }

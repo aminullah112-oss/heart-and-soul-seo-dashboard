@@ -147,6 +147,14 @@ export function loadEnv(opts: { reload?: boolean } = {}): Env {
     throw new Error(`Invalid environment configuration:\n${problems.map((p) => `  - ${p}`).join('\n')}`);
   }
 
+  // A relative STORAGE_LOCAL_PATH must resolve to the same directory in every
+  // process. The worker runs from the repo root and the web app from apps/web,
+  // so leaving this CWD-relative made them read and write different places:
+  // renders existed on disk and the dashboard served 404s for them.
+  if (!path.isAbsolute(e.STORAGE_LOCAL_PATH)) {
+    e.STORAGE_LOCAL_PATH = path.resolve(root, e.STORAGE_LOCAL_PATH);
+  }
+
   cached = e;
   return e;
 }

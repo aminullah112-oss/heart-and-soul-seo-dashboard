@@ -44,6 +44,12 @@ importers:
       eslint:
         specifier: 8.57.1
         version: 8.57.1
+      ioredis:
+        specifier: 5.11.1
+        version: 5.11.1
+      sharp:
+        specifier: 0.33.5
+        version: 0.33.5
       tsx:
         specifier: 4.19.2
         version: 4.19.2
@@ -80,6 +86,9 @@ importers:
       '@yme/storage':
         specifier: workspace:*
         version: link:../../packages/storage
+      '@yme/video':
+        specifier: workspace:*
+        version: link:../../packages/video
       argon2:
         specifier: 0.41.1
         version: 0.41.1
@@ -92,6 +101,12 @@ importers:
       react-dom:
         specifier: 18.3.1
         version: 18.3.1(react@18.3.1)
+      server-only:
+        specifier: 0.0.1
+        version: 0.0.1
+      sharp:
+        specifier: 0.33.5
+        version: 0.33.5
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -2899,6 +2914,9 @@ packages:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  server-only@0.0.1:
+    resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
 
   sharp@0.33.5:
     resolution: {integrity: sha512-haPVm1EkS9pgvHrQ/F3Xy+hgcuMV0Wm9vfIBSiwZ05k+xgb0PkBQpGsAA/oWdDobNaZTH5ppvHtzCFbnSEwHVw==}
@@ -5868,6 +5886,8 @@ snapshots:
       loose-envify: 1.4.0
 
   semver@7.8.5: {}
+
+  server-only@0.0.1: {}
 
   sharp@0.33.5:
     dependencies:

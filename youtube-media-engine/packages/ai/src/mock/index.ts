@@ -15,7 +15,16 @@ export class MockLlmProvider implements LlmProvider {
   readonly name = 'mock';
 
   async complete(req: LlmRequest): Promise<LlmResponse> {
-    const seed = stableId(req.task, JSON.stringify(req.mockContext ?? {}));
+    // Seeded from the project identity, NOT from the task name: every stage
+    // of one video must resolve to the same mock company, or the claims and
+    // the script describe different businesses and every cross-stage
+    // reference silently fails to match.
+    const ctx = (req.mockContext ?? {}) as Record<string, unknown>;
+    const identity =
+      (typeof ctx.subjectKey === 'string' && ctx.subjectKey) ||
+      (typeof ctx.title === 'string' && ctx.title) ||
+      JSON.stringify(ctx);
+    const seed = stableId(identity);
     const payload = buildMockPayload(req, seed);
     const text = JSON.stringify(payload, null, 2);
 

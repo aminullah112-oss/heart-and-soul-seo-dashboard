@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { SESSION_COOKIE } from '@/lib/auth';
+import { SESSION_COOKIE } from '@/lib/session-constants';
 
 /**
  * Edge-level gate.

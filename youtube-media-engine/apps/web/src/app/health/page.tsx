@@ -3,7 +3,7 @@ import { getSessionUser } from '@/lib/auth';
 import { getSystemHealth } from '@/lib/queries';
 import { Card, Stat, Badge, Empty, Table, money, ago } from '@/components/ui';
 import { env } from '@yme/config';
-import { assertFfmpegAvailable } from '@yme/video';
+import { assertFfmpegAvailable } from '@yme/video/ffmpeg';
 import { prisma } from '@yme/database';
 
 /** System health (spec §43). */

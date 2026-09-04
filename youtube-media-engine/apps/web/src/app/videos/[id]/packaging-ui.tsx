@@ -68,7 +68,6 @@ export function ThumbnailList(props: {
           }`}
         >
           {t.url && (
-            /* eslint-disable-next-line @next/next/no-img-element */
             <img src={t.url} alt={t.headline} className="w-full" loading="lazy" />
           )}
           <div className="bg-ink px-3 py-2">

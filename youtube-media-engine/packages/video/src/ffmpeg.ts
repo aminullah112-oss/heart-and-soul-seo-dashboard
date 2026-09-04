@@ -118,7 +118,7 @@ function tail(s: string, lines = 24): string {
 
 /** Shell-quoted only for the stored command string; execFile does not use a shell. */
 function quoteForLog(arg: string): string {
-  return /[\s"'$`\\|&;<>()*?\[\]]/.test(arg) ? `'${arg.replace(/'/g, `'\\''`)}'` : arg;
+  return /[\s"'$`\\|&;<>()*?[\]]/.test(arg) ? `'${arg.replace(/'/g, `'\\''`)}'` : arg;
 }
 
 /**

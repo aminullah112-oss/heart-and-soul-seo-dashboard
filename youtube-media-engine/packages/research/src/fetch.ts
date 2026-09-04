@@ -145,7 +145,7 @@ export function extractReadableText(html: string): { title: string | null; text:
   return {
     title: title ? decodeEntities(title).trim() : null,
     text: decodeEntities(body)
-      .replace(/[ \t ]+/g, ' ')
+      .replace(/[ \t\u00a0]+/g, ' ')
       .replace(/\n\s*\n\s*\n+/g, '\n\n')
       .split('\n')
       .map((l) => l.trim())

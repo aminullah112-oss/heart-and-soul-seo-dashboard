@@ -1,0 +1,88 @@
+# Local development stack.
+#
+# Postgres and Redis only — the app itself runs on the host via `pnpm dev:web`
+# and `pnpm dev:worker`, because rebuilding a container on every edit is a
+# worse loop than running two node processes. `docker compose --profile app up`
+# additionally runs the built app containers, which is what production looks
+# like.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-media_engine}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-media_engine}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # BullMQ needs keys to survive a restart; the default eviction policy would
+    # silently drop queued jobs under memory pressure.
+    command: redis-server --maxmemory-policy noeviction --appendonly yes
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-media_engine}?schema=public
+      REDIS_URL: redis://redis:6379
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    volumes:
+      - storage:/app/storage
+
+  worker:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: worker
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-media_engine}?schema=public
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    volumes:
+      - storage:/app/storage
+    # Rendering is CPU-bound and will take every core it is given. Cap it so a
+    # render cannot starve the web container on a single-host deployment.
+    deploy:
+      resources:
+        limits:
+          cpus: '${WORKER_CPUS:-3}'
+
+volumes:
+  pgdata:
+  redisdata:
+  storage:

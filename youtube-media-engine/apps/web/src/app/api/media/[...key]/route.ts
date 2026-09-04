@@ -19,7 +19,14 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ key: string
   if (!user) return new NextResponse('Unauthorized', { status: 401 });
 
   const { key: segments } = await ctx.params;
-  const key = decodeURIComponent(segments.join('/'));
+  // A malformed percent-encoding makes decodeURIComponent throw; that is a bad
+  // request, not a 500.
+  let key: string;
+  try {
+    key = decodeURIComponent(segments.join('/'));
+  } catch {
+    return new NextResponse('Invalid media key', { status: 400 });
+  }
 
   const storage = getStorage();
   if (storage.driver !== 'local') {
@@ -27,7 +34,14 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ key: string
     return NextResponse.redirect(await storage.signedUrl(key, 900));
   }
 
-  const filePath = storage.localPath(key);
+  // localPath rejects keys that escape the storage root. That is a bad
+  // request, not a server error, and must not surface a stack trace.
+  let filePath: string | null;
+  try {
+    filePath = storage.localPath(key);
+  } catch {
+    return new NextResponse('Invalid media key', { status: 400 });
+  }
   if (!filePath) return new NextResponse('Not found', { status: 404 });
 
   let size: number;

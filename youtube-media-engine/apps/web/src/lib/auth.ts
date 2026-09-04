@@ -19,8 +19,8 @@ import { env } from '@yme/config';
  * a slow KDF. Passwords do, and use argon2id.
  */
 
-export const SESSION_COOKIE = 'yme_session';
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+export { SESSION_COOKIE, CSRF_COOKIE } from './session-constants.js';
+import { SESSION_COOKIE, CSRF_COOKIE, SESSION_TTL_MS } from './session-constants.js';
 
 export interface SessionUser {
   id: string;
@@ -122,8 +122,6 @@ export class AuthError extends Error {
  * Next server actions carry their own origin checks, but the login POST and
  * the media route are plain handlers, and defence in depth costs one cookie.
  */
-export const CSRF_COOKIE = 'yme_csrf';
-
 export async function issueCsrfToken(): Promise<string> {
   const store = await cookies();
   const existing = store.get(CSRF_COOKIE)?.value;

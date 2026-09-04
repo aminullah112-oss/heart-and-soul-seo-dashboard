@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { getSessionUser } from '@/lib/auth';
 import { getChannel, getProductionQueue } from '@/lib/queries';
 import { Card, Badge, Empty, Table, LinkCell, money, ago } from '@/components/ui';
-import { PRODUCTION_STAGES } from '@yme/pipeline';
+import { PIPELINE_STAGES } from '@yme/shared';
 
-const ALL_STAGES = [...PRODUCTION_STAGES, 'APPROVAL', 'SCHEDULED'] as const;
+const ALL_STAGES = PIPELINE_STAGES.filter((s) => s !== 'PUBLISHED');
 
 export default async function QueuePage() {
   const user = await getSessionUser();
