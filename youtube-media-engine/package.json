@@ -1,9 +1,12 @@
 {
   "name": "youtube-media-engine",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "description": "AI x Business x Money YouTube media operating system",
-  "engines": { "node": ">=20.11" },
+  "engines": {
+    "node": ">=20.11"
+  },
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "build": "pnpm -r --filter './packages/**' build && pnpm --filter @yme/web build",
