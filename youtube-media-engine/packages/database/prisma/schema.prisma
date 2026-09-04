@@ -1,0 +1,1194 @@
+// YouTube Media Engine — data model
+//
+// Design notes worth knowing before editing:
+//  * VideoProject is the hub. Every production artefact hangs off it, and the
+//    `stage` column is the single source of truth for the production queue.
+//  * Nothing is deleted on failure. A failed render leaves its VideoRender row
+//    with status FAILED so a retry re-renders only that stage (spec §37).
+//  * Claims and Sources are separate tables with an explicit join, because a
+//    claim supported by three independent sources is materially stronger than
+//    one supported by three pages of the same outlet.
+//  * Money is stored as Decimal(12,6). Floats accumulate error across the
+//    thousands of small LLM charges that make up a video's cost.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────── Auth ───────────────────────────────
+
+enum UserRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  role         UserRole @default(EDITOR)
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions       Session[]
+  approvals      ApprovalEvent[]
+  auditLogs      AuditLog[]
+  topicDecisions Topic[]         @relation("TopicDecidedBy")
+
+  @@index([role])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  userAgent  String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
+
+// ────────────────────────────── Channel ─────────────────────────────
+
+model Channel {
+  id               String  @id @default(cuid())
+  name             String
+  positioning      String
+  category         String  @default("Business / Technology")
+  language         String  @default("English")
+  primaryAudience  String
+  youtubeChannelId String?
+
+  videoLengthMinMinutes Int     @default(8)
+  videoLengthMaxMinutes Int     @default(15)
+  publishPerWeek        Int     @default(2)
+  shortsPerVideo        Int     @default(2)
+  minimumTopicScore     Int     @default(75)
+  minimumQcScore        Int     @default(85)
+  automaticPublish      Boolean @default(false)
+  humanApproval         Boolean @default(true)
+
+  // Operator-tunable scoring weights (spec §7: "allow weights to be configured").
+  scoringWeights Json
+
+  // Voice, tone and banned-phrase rules applied to every script.
+  styleGuide Json?
+
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  topics            Topic[]
+  videoProjects     VideoProject[]
+  performanceReports PerformanceReport[]
+  sponsors          Sponsor[]
+  entities          Entity[]
+  pronunciations    PronunciationEntry[]
+  musicTracks       MusicTrack[]
+}
+
+// ─────────────────────────────── Topics ─────────────────────────────
+
+enum Pillar {
+  BUSINESS_CASE_STUDY
+  AI_BUSINESS
+  AI_AUTOMATION_SAAS
+  BUSINESS_FAILURE
+  FUTURE_OF_BUSINESS
+}
+
+enum TopicStatus {
+  DISCOVERED
+  SCORED
+  REJECTED_BY_SCORE
+  REJECTED_BY_DUPLICATE
+  REJECTED_BY_HUMAN
+  APPROVED
+  IN_PRODUCTION
+  PUBLISHED
+  ARCHIVED
+}
+
+model Topic {
+  id          String      @id @default(cuid())
+  channelId   String
+  title       String
+  angle       String
+  pillar      Pillar
+  status      TopicStatus @default(DISCOVERED)
+  rationale   String?
+
+  // Why the trend hunter surfaced it — never "trending", always a mechanism.
+  discoverySignal String?
+  discoveredVia   String   @default("trend-hunter")
+
+  // Denormalised copy of the newest TopicScore.overall so the radar can sort
+  // without a correlated subquery on every page load.
+  latestScore Float?
+
+  decidedById String?
+  decidedAt   DateTime?
+  decisionNote String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  channel      Channel        @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  decidedBy    User?          @relation("TopicDecidedBy", fields: [decidedById], references: [id], onDelete: SetNull)
+  scores       TopicScore[]
+  videoProject VideoProject?
+  entityLinks  EntityLink[]
+
+  @@index([channelId, status])
+  @@index([channelId, latestScore(sort: Desc)])
+  @@index([pillar])
+}
+
+model TopicScore {
+  id      String @id @default(cuid())
+  topicId String
+
+  viralPotential       Float
+  searchDemand         Float
+  advertiserValue      Float
+  evergreenValue       Float
+  storyPotential       Float
+  timeliness           Float
+  competition          Float
+  researchAvailability Float
+  visualPotential      Float
+  affiliatePotential   Float
+  sponsorshipPotential Float
+  channelRelevance     Float
+
+  overall                Float
+  monetizationPotential  Float
+  // Snapshot of the weights used, so an old score stays interpretable after
+  // the operator retunes them.
+  weightsUsed            Json
+  contributions          Json
+  reasoning              String
+  gatesPassed            Boolean  @default(false)
+  gateFailureReasons     String[]
+  scoredByModel          String
+  createdAt              DateTime @default(now())
+
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@index([topicId, createdAt(sort: Desc)])
+}
+
+// ────────────────────────── Content genome ──────────────────────────
+
+enum EntityKind {
+  COMPANY
+  PERSON
+  PRODUCT
+  INDUSTRY
+  TECHNOLOGY
+  BUSINESS_MODEL
+  MARKET
+}
+
+model Entity {
+  id        String     @id @default(cuid())
+  channelId String
+  kind      EntityKind
+  name      String
+  // Normalised lookup key: lowercase, punctuation stripped.
+  key       String
+  summary   String?
+  metadata  Json?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  channel  Channel      @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  links    EntityLink[]
+  fromEdges ContentRelationship[] @relation("RelationFrom")
+  toEdges   ContentRelationship[] @relation("RelationTo")
+
+  @@unique([channelId, key])
+  @@index([channelId, kind])
+}
+
+/// Edge in the knowledge graph (spec §26). `strength` decays if an edge stops
+/// appearing in new research, so stale relationships stop suggesting topics.
+model ContentRelationship {
+  id           String   @id @default(cuid())
+  fromEntityId String
+  toEntityId   String
+  relation     String
+  strength     Float    @default(0.5)
+  evidenceUrl  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  from Entity @relation("RelationFrom", fields: [fromEntityId], references: [id], onDelete: Cascade)
+  to   Entity @relation("RelationTo", fields: [toEntityId], references: [id], onDelete: Cascade)
+
+  @@unique([fromEntityId, toEntityId, relation])
+  @@index([toEntityId])
+}
+
+/// Join from an entity to whatever mentions it, so "what have we said about
+/// NVIDIA" is one query.
+model EntityLink {
+  id             String  @id @default(cuid())
+  entityId       String
+  topicId        String?
+  videoProjectId String?
+  role           String  @default("MENTIONED")
+
+  entity       Entity        @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  topic        Topic?        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  videoProject VideoProject? @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@unique([entityId, topicId, videoProjectId])
+  @@index([videoProjectId])
+  @@index([topicId])
+}
+
+// ───────────────────────────── Production ───────────────────────────
+
+enum PipelineStage {
+  RESEARCH
+  STORY
+  SCRIPT
+  FACT_CHECK
+  VISUALS
+  VOICE
+  RENDER
+  PACKAGING
+  QC
+  APPROVAL
+  SCHEDULED
+  PUBLISHED
+}
+
+enum ProjectStatus {
+  ACTIVE
+  BLOCKED
+  FAILED
+  ON_HOLD
+  ABANDONED
+  COMPLETED
+}
+
+model VideoProject {
+  id        String        @id @default(cuid())
+  channelId String
+  topicId   String        @unique
+  slug      String        @unique
+  stage     PipelineStage @default(RESEARCH)
+  status    ProjectStatus @default(ACTIVE)
+
+  targetMinutes Int    @default(11)
+  blockedReason String?
+
+  // Selected packaging, chosen by a human in the review screen.
+  selectedTitleId     String?
+  selectedThumbnailId String?
+
+  approvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  channel         Channel          @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  topic           Topic            @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  research        ResearchProject?
+  storyBrief      StoryBrief?
+  storyboard      Storyboard?
+  scripts         Script[]
+  scenes          Scene[]
+  assets          Asset[]
+  voiceovers      Voiceover[]
+  renders         VideoRender[]
+  thumbnails      Thumbnail[]
+  titleVariants   TitleVariant[]
+  description     VideoDescription?
+  factCheck       FactCheckReport?
+  qcReport        QcReport?
+  shorts          ShortClip[]
+  publishingJobs  PublishingJob[]
+  youtubeVideo    YouTubeVideo?
+  costRecords     CostRecord[]
+  automationJobs  AutomationJob[]
+  approvalEvents  ApprovalEvent[]
+  duplicateFlags  DuplicateFlag[]  @relation("FlagOwner")
+  flaggedAgainst  DuplicateFlag[]  @relation("FlagTarget")
+  entityLinks     EntityLink[]
+
+  @@index([channelId, stage])
+  @@index([status])
+}
+
+// ───────────────────────────── Research ─────────────────────────────
+
+model ResearchProject {
+  id             String   @id @default(cuid())
+  videoProjectId String   @unique
+  question       String
+  searchQueries  String[]
+  summary        String?
+  /// Coverage 0-100: how much of the story brief is backed by verifiable
+  /// sources. Low coverage is why a topic gets rejected at this stage.
+  coverageScore  Float?
+  completedAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  sources      Source[]
+  claims       Claim[]
+}
+
+enum SourceTier {
+  PRIMARY_COMPANY
+  REGULATORY_FILING
+  GOVERNMENT
+  FINANCIAL_REPORT
+  ACADEMIC
+  REPUTABLE_JOURNALISM
+  INDUSTRY_RESEARCH
+  SPECIALIST_PUBLICATION
+  OTHER
+}
+
+model Source {
+  id                String     @id @default(cuid())
+  researchProjectId String
+  url               String
+  title             String
+  publisher         String
+  tier              SourceTier
+  publishedAt       DateTime?
+  retrievedAt       DateTime   @default(now())
+  excerpt           String
+  reliability       Float
+  /// Set when the fetch failed or returned a paywall/soft-404 — the source is
+  /// kept for the audit trail but cannot support a claim.
+  unavailableReason String?
+
+  researchProject ResearchProject @relation(fields: [researchProjectId], references: [id], onDelete: Cascade)
+  claimLinks      ClaimSource[]
+
+  @@unique([researchProjectId, url])
+  @@index([tier])
+}
+
+enum ClaimStatus {
+  UNVERIFIED
+  VERIFIED
+  DISPUTED
+  REJECTED
+}
+
+enum ClaimConfidence {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ClaimKind {
+  FINANCIAL
+  HISTORICAL
+  QUANTITATIVE
+  CAUSAL
+  QUOTE
+  DESCRIPTIVE
+}
+
+model Claim {
+  id                String          @id @default(cuid())
+  researchProjectId String
+  /// Stable handle used by scripts and charts, e.g. "nvda-datacenter-rev-fy24".
+  key               String
+  text              String
+  kind              ClaimKind
+  confidence        ClaimConfidence
+  status            ClaimStatus     @default(UNVERIFIED)
+  /// The date the fact is true AS OF — a revenue figure without this is a
+  /// future correction waiting to happen.
+  asOf              DateTime?
+  notes             String?
+  usedInScript      Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  researchProject ResearchProject @relation(fields: [researchProjectId], references: [id], onDelete: Cascade)
+  sourceLinks     ClaimSource[]
+
+  @@unique([researchProjectId, key])
+  @@index([status, confidence])
+}
+
+model ClaimSource {
+  claimId  String
+  sourceId String
+  /// Whether this source directly states the claim or merely supports it.
+  support  String @default("DIRECT")
+
+  claim  Claim  @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@id([claimId, sourceId])
+  @@index([sourceId])
+}
+
+// ─────────────────────────── Story & script ─────────────────────────
+
+model StoryBrief {
+  id              String   @id @default(cuid())
+  videoProjectId  String   @unique
+  centralQuestion String
+  thesis          String
+  targetViewer    String
+  whyCare         String
+  hook            String
+  conflict        String
+  stakes          String
+  /// Array of {section, purpose}. Stored as JSON because the arc is different
+  /// for every story by design (spec §10).
+  narrativeArc    Json
+  keyRevelations  String[]
+  ending          String
+  cta             String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+}
+
+model Script {
+  id             String   @id @default(cuid())
+  videoProjectId String
+  version        Int
+  workingTitle   String
+  /// Array of ScriptSection objects.
+  sections       Json
+  wordCount      Int
+  estimatedSeconds Float
+  retentionScore Float?
+  retentionAnalysis Json?
+  qualityScore   Float?
+  originalityScore Float?
+  isCurrent      Boolean  @default(false)
+  revisionReason String?
+  createdAt      DateTime @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@unique([videoProjectId, version])
+  @@index([videoProjectId, isCurrent])
+}
+
+// ──────────────────────────── Storyboard ────────────────────────────
+
+model Storyboard {
+  id             String   @id @default(cuid())
+  videoProjectId String   @unique
+  scriptVersion  Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  scenes       Scene[]
+}
+
+enum VisualKind {
+  STOCK_VIDEO
+  STOCK_IMAGE
+  GENERATED_IMAGE
+  CHART
+  SCREENSHOT
+  TEXT_CARD
+  MAP
+  ARCHIVAL
+  B_ROLL
+}
+
+model Scene {
+  id             String     @id @default(cuid())
+  storyboardId   String
+  videoProjectId String
+  sectionId      String
+  index          Int
+  narration      String
+  visualKind     VisualKind
+  visualQuery    String
+  onScreenText   String?
+  /// ChartSpec JSON when visualKind = CHART. Always carries sourceClaimKey.
+  chartSpec      Json?
+  estimatedSeconds Float
+  /// Real duration from ffprobe once the scene's voiceover exists.
+  actualSeconds  Float?
+  startSeconds   Float?
+  assetId        String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  storyboard   Storyboard   @relation(fields: [storyboardId], references: [id], onDelete: Cascade)
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  asset        Asset?       @relation(fields: [assetId], references: [id], onDelete: SetNull)
+  voiceover    Voiceover?
+
+  @@unique([storyboardId, index])
+  @@index([videoProjectId])
+}
+
+// ────────────────────────────── Assets ──────────────────────────────
+
+enum AssetKind {
+  STOCK_VIDEO
+  STOCK_IMAGE
+  GENERATED_IMAGE
+  CHART_PNG
+  AUDIO_VOICE
+  AUDIO_MUSIC
+  THUMBNAIL
+  RENDER_OUTPUT
+  SUBTITLE
+  OTHER
+}
+
+enum CopyrightRisk {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+  UNKNOWN
+}
+
+model Asset {
+  id             String        @id @default(cuid())
+  videoProjectId String?
+  kind           AssetKind
+  provider       String
+  /// Where it came from. Null only for assets this system generated itself.
+  sourceUrl      String?
+  storageKey     String
+  filename       String
+  mimeType       String
+  bytes          Int?
+  width          Int?
+  height         Int?
+  durationSeconds Float?
+  licence        String?
+  licenceUrl     String?
+  attributionRequired Boolean       @default(false)
+  attributionText     String?
+  copyrightRisk       CopyrightRisk @default(UNKNOWN)
+  /// Set once a human or the copyright check has cleared it for use.
+  clearedAt      DateTime?
+  createdAt      DateTime      @default(now())
+
+  videoProject VideoProject? @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  scenes       Scene[]
+
+  @@index([videoProjectId, kind])
+  @@index([copyrightRisk])
+}
+
+model PronunciationEntry {
+  id        String   @id @default(cuid())
+  channelId String
+  /// Written form as it appears in the script, e.g. "NVIDIA" or "SaaS".
+  written   String
+  /// What to feed the TTS engine instead, e.g. "en-VID-eeuh".
+  spoken    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, written])
+}
+
+model MusicTrack {
+  id          String   @id @default(cuid())
+  channelId   String
+  title       String
+  mood        String
+  storageKey  String
+  licence     String
+  licenceUrl  String?
+  attribution String?
+  bpm         Int?
+  durationSeconds Float?
+  createdAt   DateTime @default(now())
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@index([channelId, mood])
+}
+
+// ───────────────────────────── Voiceover ────────────────────────────
+
+model Voiceover {
+  id             String   @id @default(cuid())
+  videoProjectId String
+  sceneId        String   @unique
+  provider       String
+  voiceId        String
+  storageKey     String
+  durationSeconds Float
+  characters     Int
+  /// The text actually sent to TTS, after the pronunciation dictionary was
+  /// applied. Kept so a bad pronunciation is debuggable.
+  spokenText     String
+  createdAt      DateTime @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  scene        Scene        @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@index([videoProjectId])
+}
+
+// ────────────────────────────── Render ──────────────────────────────
+
+enum RenderStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum RenderFormat {
+  LONG_FORM_16_9
+  SHORT_9_16
+}
+
+model VideoRender {
+  id             String       @id @default(cuid())
+  videoProjectId String
+  format         RenderFormat @default(LONG_FORM_16_9)
+  status         RenderStatus @default(QUEUED)
+  resolution     String
+  fps            Int
+  storageKey     String?
+  subtitleSrtKey String?
+  subtitleVttKey String?
+  durationSeconds Float?
+  bytes          Int?
+  /// The exact ffmpeg invocation, kept verbatim for reproducing a bad render.
+  ffmpegCommand  String?
+  error          String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime     @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  shortClip    ShortClip?
+
+  @@index([videoProjectId, status])
+}
+
+// ──────────────────────────── Packaging ─────────────────────────────
+
+model TitleVariant {
+  id             String   @id @default(cuid())
+  videoProjectId String
+  text           String
+  curiosity      Float
+  clarity        Float
+  searchIntent   Float
+  emotionalImpact Float
+  uniqueness     Float
+  credibility    Float
+  /// Composite of the six rubric dimensions. NOT a CTR prediction.
+  rubricScore    Float
+  overclaims     Boolean  @default(false)
+  rationale      String
+  isSelected     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([videoProjectId, rubricScore(sort: Desc)])
+}
+
+enum MisleadingRisk {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Thumbnail {
+  id             String         @id @default(cuid())
+  videoProjectId String
+  concept        String
+  headline       String
+  visualDirection String
+  emotionalHook  String
+  /// Rubric score, not a predicted CTR. See docs/SCORING.md.
+  rubricScore    Float
+  mobileLegible  Boolean        @default(true)
+  misleadingRisk MisleadingRisk @default(NONE)
+  storageKey     String?
+  isSelected     Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([videoProjectId, rubricScore(sort: Desc)])
+}
+
+model VideoDescription {
+  id             String   @id @default(cuid())
+  videoProjectId String   @unique
+  body           String
+  /// Array of {seconds, label}.
+  chapters       Json
+  tags           String[]
+  references     Json
+  disclosure     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+}
+
+model ShortClip {
+  id             String   @id @default(cuid())
+  videoProjectId String
+  renderId       String?  @unique
+  hook           String
+  narration      String
+  sourceSectionId String
+  startSeconds   Float
+  endSeconds     Float
+  onScreenText   String[]
+  ctaToLongForm  String
+  approvedAt     DateTime?
+  createdAt      DateTime @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  render       VideoRender? @relation(fields: [renderId], references: [id], onDelete: SetNull)
+
+  @@index([videoProjectId])
+}
+
+// ──────────────────────── Fact check & QC ───────────────────────────
+
+enum CheckVerdict {
+  PASS
+  WARNING
+  FAIL
+}
+
+model FactCheckReport {
+  id             String   @id @default(cuid())
+  videoProjectId String   @unique
+  scriptVersion  Int
+  verdict        CheckVerdict
+  /// Array of FactCheckFinding objects.
+  findings       Json
+  highRiskCount  Int      @default(0)
+  mediumRiskCount Int     @default(0)
+  lowRiskCount   Int      @default(0)
+  unsupportedAssertions Int @default(0)
+  createdAt      DateTime @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+}
+
+model QcReport {
+  id             String   @id @default(cuid())
+  videoProjectId String   @unique
+  scriptVersion  Int
+
+  factCheck      CheckVerdict
+  copyright      CheckVerdict
+  policy         CheckVerdict
+  aiDisclosure   CheckVerdict
+
+  scriptQuality      Float
+  retention          Float
+  visualQuality      Float
+  monetizationSafety Float
+  originality        Float
+  finalScore         Float
+
+  passed           Boolean
+  blockingReasons  String[]
+  warnings         String[]
+  /// Per-check detail so the review screen can show what actually failed.
+  detail           Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+}
+
+enum DuplicateVerdict {
+  RELATED
+  CANNIBALIZES
+  DUPLICATE
+}
+
+model DuplicateFlag {
+  id             String           @id @default(cuid())
+  videoProjectId String
+  againstProjectId String?
+  againstTitle   String
+  verdict        DuplicateVerdict
+  topicalScore   Float
+  phrasalScore   Float
+  combinedScore  Float
+  sharedEntities String[]
+  reason         String
+  resolvedAt     DateTime?
+  resolution     String?
+  createdAt      DateTime         @default(now())
+
+  videoProject VideoProject  @relation("FlagOwner", fields: [videoProjectId], references: [id], onDelete: Cascade)
+  against      VideoProject? @relation("FlagTarget", fields: [againstProjectId], references: [id], onDelete: SetNull)
+
+  @@index([videoProjectId, verdict])
+}
+
+// ──────────────────────────── Approval ──────────────────────────────
+
+enum ApprovalDecision {
+  APPROVED
+  REVISION_REQUESTED
+  REJECTED
+}
+
+model ApprovalEvent {
+  id             String           @id @default(cuid())
+  videoProjectId String
+  userId         String?
+  stage          PipelineStage
+  decision       ApprovalDecision
+  note           String?
+  createdAt      DateTime         @default(now())
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([videoProjectId, createdAt(sort: Desc)])
+}
+
+// ──────────────────────────── Publishing ────────────────────────────
+
+enum PublishVisibility {
+  PRIVATE
+  UNLISTED
+  PUBLIC
+}
+
+enum PublishStatus {
+  PENDING_APPROVAL
+  SCHEDULED
+  UPLOADING
+  UPLOADED
+  FAILED
+  CANCELLED
+}
+
+model PublishingJob {
+  id             String            @id @default(cuid())
+  videoProjectId String
+  renderId       String?
+  visibility     PublishVisibility @default(PRIVATE)
+  status         PublishStatus     @default(PENDING_APPROVAL)
+  scheduledFor   DateTime?
+  /// Set only by an explicit human approval action. The uploader refuses to
+  /// run without it (spec §24).
+  approvedById   String?
+  approvedAt     DateTime?
+  attempts       Int               @default(0)
+  error          String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  videoProject VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([status, scheduledFor])
+  @@index([videoProjectId])
+}
+
+model YouTubeVideo {
+  id             String            @id @default(cuid())
+  videoProjectId String            @unique
+  youtubeId      String            @unique
+  title          String
+  description    String
+  tags           String[]
+  categoryId     String
+  visibility     PublishVisibility
+  playlistId     String?
+  thumbnailSet   Boolean           @default(false)
+  publishedAt    DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  videoProject VideoProject       @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  snapshots    AnalyticsSnapshot[]
+  abTests      AbTest[]
+}
+
+// ──────────────────────────── Analytics ─────────────────────────────
+
+model AnalyticsSnapshot {
+  id             String   @id @default(cuid())
+  youtubeVideoId String
+  /// Day the metrics describe, not the day they were fetched.
+  asOf           DateTime
+  daysSincePublish Int
+
+  impressions    Int?
+  ctr            Float?
+  views          Int?
+  averageViewDurationSeconds Float?
+  averageViewPercentage      Float?
+  watchTimeMinutes Float?
+  subscribersGained Int?
+  likes          Int?
+  comments       Int?
+  shares         Int?
+  returningViewers Int?
+  estimatedRevenueUsd Float?
+  rpmUsd         Float?
+  /// {source: views} — YouTube traffic source breakdown.
+  trafficSources Json?
+  /// Relative audience-retention curve, [{ratio, audienceWatchRatio}].
+  retentionCurve Json?
+  createdAt      DateTime @default(now())
+
+  youtubeVideo YouTubeVideo @relation(fields: [youtubeVideoId], references: [id], onDelete: Cascade)
+
+  @@unique([youtubeVideoId, asOf])
+  @@index([asOf])
+}
+
+model PerformanceReport {
+  id         String   @id @default(cuid())
+  channelId  String
+  periodStart DateTime
+  periodEnd   DateTime
+  /// Findings the learning loop is confident about, with sample sizes attached.
+  findings   Json
+  /// Findings that do NOT yet have enough data — surfaced separately so the
+  /// operator never acts on n=3 (spec §30, §31).
+  provisional Json
+  videosAnalysed Int
+  summary    String
+  createdAt  DateTime @default(now())
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, periodStart, periodEnd])
+}
+
+enum AbTestKind {
+  THUMBNAIL
+  TITLE
+}
+
+enum AbTestStatus {
+  RUNNING
+  CONCLUSIVE
+  INCONCLUSIVE
+  STOPPED
+}
+
+model AbTest {
+  id             String       @id @default(cuid())
+  youtubeVideoId String
+  kind           AbTestKind
+  status         AbTestStatus @default(RUNNING)
+  startedAt      DateTime     @default(now())
+  endedAt        DateTime?
+  winnerVariantId String?
+  /// Why the test concluded — including "not enough impressions", which is a
+  /// legitimate and common outcome.
+  conclusion     String?
+
+  youtubeVideo YouTubeVideo @relation(fields: [youtubeVideoId], references: [id], onDelete: Cascade)
+  variants     AbVariant[]
+
+  @@index([youtubeVideoId, kind])
+}
+
+model AbVariant {
+  id          String   @id @default(cuid())
+  abTestId    String
+  label       String
+  value       String
+  storageKey  String?
+  impressions Int      @default(0)
+  clicks      Int      @default(0)
+  views       Int      @default(0)
+  watchTimeMinutes Float @default(0)
+  activeFrom  DateTime @default(now())
+  activeTo    DateTime?
+
+  abTest AbTest @relation(fields: [abTestId], references: [id], onDelete: Cascade)
+
+  @@index([abTestId])
+}
+
+// ─────────────────────── Monetization & CRM ─────────────────────────
+
+enum SponsorStatus {
+  IDENTIFIED
+  RESEARCHING
+  CONTACTED
+  IN_CONVERSATION
+  NEGOTIATING
+  WON
+  LOST
+  DO_NOT_CONTACT
+}
+
+model Sponsor {
+  id             String        @id @default(cuid())
+  channelId      String
+  company        String
+  category       String
+  website        String?
+  contactName    String?
+  contactEmail   String?
+  status         SponsorStatus @default(IDENTIFIED)
+  fitScore       Float?
+  fitRationale   String?
+  estimatedValueUsd Float?
+  lastContactAt  DateTime?
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@unique([channelId, company])
+  @@index([channelId, status])
+}
+
+// ───────────────────────────── Costs ────────────────────────────────
+
+enum CostCategory {
+  LLM
+  SEARCH
+  TTS
+  IMAGE
+  STOCK
+  RENDER
+  STORAGE
+}
+
+model CostRecord {
+  id             String       @id @default(cuid())
+  videoProjectId String?
+  category       CostCategory
+  provider       String
+  stage          String
+  /// Decimal, not Float: thousands of sub-cent charges accumulate error.
+  usd            Decimal      @db.Decimal(12, 6)
+  units          Float
+  unitLabel      String
+  model          String?
+  detail         Json?
+  createdAt      DateTime     @default(now())
+
+  videoProject VideoProject? @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([videoProjectId])
+  @@index([category, createdAt])
+}
+
+// ────────────────────── Jobs & observability ────────────────────────
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+  DEAD_LETTER
+}
+
+/// Mirror of the BullMQ job, kept in Postgres so the dashboard can show
+/// history after Redis is flushed and so a failed stage is retryable by hand.
+model AutomationJob {
+  id             String    @id @default(cuid())
+  videoProjectId String?
+  queue          String
+  jobName        String
+  bullJobId      String?
+  stage          String
+  status         JobStatus @default(QUEUED)
+  attempts       Int       @default(0)
+  maxAttempts    Int       @default(3)
+  payload        Json?
+  result         Json?
+  error          String?
+  errorKind      String?
+  retryable      Boolean   @default(true)
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  durationMs     Int?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  videoProject VideoProject? @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([status, queue])
+  @@index([videoProjectId, stage])
+  @@index([createdAt])
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     LogLevel
+  source    String
+  message   String
+  jobId     String?
+  videoProjectId String?
+  stage     String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([level, createdAt])
+  @@index([videoProjectId])
+}

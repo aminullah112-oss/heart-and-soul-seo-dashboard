@@ -1,0 +1,33 @@
+{
+  "name": "youtube-media-engine",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI x Business x Money YouTube media operating system",
+  "engines": { "node": ">=20.11" },
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "build": "pnpm -r --filter './packages/**' build && pnpm --filter @yme/web build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+    "db:generate": "pnpm --filter @yme/database generate",
+    "db:migrate": "pnpm --filter @yme/database migrate",
+    "db:push": "pnpm --filter @yme/database push",
+    "db:seed": "pnpm --filter @yme/database seed",
+    "db:studio": "pnpm --filter @yme/database studio",
+    "dev:web": "pnpm --filter @yme/web dev",
+    "dev:worker": "pnpm --filter @yme/worker dev",
+    "pipeline": "tsx scripts/run-pipeline.ts",
+    "doctor": "tsx scripts/doctor.ts"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@typescript-eslint/eslint-plugin": "8.20.0",
+    "@typescript-eslint/parser": "8.20.0",
+    "eslint": "8.57.1",
+    "tsx": "4.19.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}

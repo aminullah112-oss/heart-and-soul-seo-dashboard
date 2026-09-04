@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+storage/
+tmp/
+.render-cache/
+*.log
+.pnpm-store/
+prisma/migrations/dev.db*
