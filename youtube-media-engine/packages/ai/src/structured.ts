@@ -8,7 +8,14 @@ import { TASK_TIER, type LlmMessage, type LlmTask, type ModelTier } from './type
 
 export interface StructuredRequest<T> {
   task: LlmTask;
-  schema: z.ZodType<T>;
+  /**
+   * Input is `unknown` on purpose. With `z.ZodType<T>` the generic also binds to
+   * the schema's INPUT type, so any schema using `.default()` infers its
+   * pre-parse shape (fields optional) and every consumer has to re-narrow.
+   * Pinning input to unknown makes T the parsed OUTPUT type, which is what a
+   * caller holding a validated document actually has.
+   */
+  schema: z.ZodType<T, z.ZodTypeDef, unknown>;
   system: string;
   prompt: string;
   /** Overrides the task's default model tier. */

@@ -1,0 +1,12 @@
+export { discoverTopics, requireChannel, type DiscoveryResult } from './trend-hunter.js';
+export { scoreTopic, scorePendingTopics, type ScoreResult } from './topic-scorer.js';
+export { runResearch, assertResearchable, COVERAGE_FLOOR, type ResearchResult } from './researcher.js';
+export { buildStoryBrief } from './story-architect.js';
+export { writeScript, scoreScriptQuality, RETENTION_FLOOR, MAX_REWRITES, type ScriptResult } from './scriptwriter.js';
+export { factCheckScript, type FactCheckResult } from './fact-checker.js';
+export { buildStoryboard, validateChart, MAX_SCENE_SECONDS, type StoryboardResult } from './visual-director.js';
+export { buildPackaging, deriveChapters, type PackagingResult } from './packaging.js';
+export { runQualityControl, assessCopyright, assessVisualQuality, type QcResultSummary } from './qc.js';
+export { updateGenome, suggestFollowups, EDGE_DECAY, EDGE_REINFORCE } from './genome.js';
+export { detectDuplicates, type DedupeResult } from './dedupe.js';
+export * from './prompts.js';

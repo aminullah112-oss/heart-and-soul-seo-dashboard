@@ -30,6 +30,37 @@ importers:
         specifier: 3.2.7
         version: 3.2.7(@types/node@22.10.5)(jiti@2.7.0)(tsx@4.19.2)
 
+  packages/agents:
+    dependencies:
+      '@yme/ai':
+        specifier: workspace:*
+        version: link:../ai
+      '@yme/config':
+        specifier: workspace:*
+        version: link:../config
+      '@yme/database':
+        specifier: workspace:*
+        version: link:../database
+      '@yme/images':
+        specifier: workspace:*
+        version: link:../images
+      '@yme/research':
+        specifier: workspace:*
+        version: link:../research
+      '@yme/shared':
+        specifier: workspace:*
+        version: link:../shared
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.5
+        version: 22.10.5
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   packages/ai:
     dependencies:
       '@anthropic-ai/sdk':
