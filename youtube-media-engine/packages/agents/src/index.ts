@@ -9,4 +9,5 @@ export { buildPackaging, deriveChapters, type PackagingResult } from './packagin
 export { runQualityControl, assessCopyright, assessVisualQuality, type QcResultSummary } from './qc.js';
 export { updateGenome, suggestFollowups, EDGE_DECAY, EDGE_REINFORCE } from './genome.js';
 export { detectDuplicates, type DedupeResult } from './dedupe.js';
+export { scoreSponsorFit, scoreAllSponsors, type SponsorFitResult } from './sponsors.js';
 export * from './prompts.js';
