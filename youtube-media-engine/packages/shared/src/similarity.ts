@@ -92,9 +92,16 @@ export function checkDuplicates(input: DuplicateCheckInput): DuplicateMatch[] {
     const sharedEntities = (e.entityKeys ?? []).map((x) => x.toLowerCase()).filter((x) => candEntities.has(x));
 
     // Sharing the primary subject (e.g. both are NVIDIA videos) lifts an
-    // otherwise-moderate similarity into cannibalization territory, because
-    // they compete for the same search intent even when worded differently.
-    const entityBoost = sharedEntities.length > 0 ? 0.12 : 0;
+    // otherwise-moderate similarity, because two videos about the same company
+    // compete for the same search intent even when worded differently.
+    //
+    // KNOWN LIMITATION: this is lexical, so "How NVIDIA Makes Money" and "How
+    // NVIDIA Makes Billions From AI" share almost no content words after
+    // stopword removal and surface as RELATED rather than CANNIBALIZES. The
+    // boost is deliberately not inflated to force that verdict — a threshold
+    // tuned until one example passes is not detection, it is overfitting.
+    // Catching paraphrased overlap needs embeddings; see docs/ARCHITECTURE.md.
+    const entityBoost = sharedEntities.length > 0 ? 0.2 : 0;
     const effective = Math.min(1, similarity.combined + entityBoost);
 
     let verdict: DuplicateVerdict = 'DISTINCT';
@@ -111,6 +118,16 @@ export function checkDuplicates(input: DuplicateCheckInput): DuplicateMatch[] {
     } else if (effective >= RELATED_THRESHOLD) {
       verdict = 'RELATED';
       reason = `Related to "${e.title}" (${pct(effective)} overlap) — good internal-link candidate`;
+    } else if (sharedEntities.length > 0) {
+      // Rule, not a tuned threshold: two videos about the same company are at
+      // minimum related, however differently they are worded. RELATED is
+      // informational and never blocks, so surfacing it costs nothing and
+      // missing it hides the internal-link and cannibalization context a human
+      // needs.
+      verdict = 'RELATED';
+      reason =
+        `Shares subject with "${e.title}" (${sharedEntities.join(', ')}) though the wording differs ` +
+        `(${pct(effective)} text overlap) — check they are not competing for the same search intent`;
     }
 
     if (verdict !== 'DISTINCT') {

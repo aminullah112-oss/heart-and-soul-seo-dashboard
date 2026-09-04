@@ -97,6 +97,7 @@ export async function writeScript(opts: {
     title: project.topic.title,
     narrativeArc: arc,
     claimKeys: usableClaims.map((c) => c.key),
+    targetWords,
   };
 
   let draft = await generateStructured({

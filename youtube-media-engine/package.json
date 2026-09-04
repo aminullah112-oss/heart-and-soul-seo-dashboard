@@ -31,6 +31,14 @@
     "eslint": "8.57.1",
     "tsx": "4.19.2",
     "typescript": "5.9.3",
-    "vitest": "3.2.7"
+    "vitest": "3.2.7",
+    "@yme/config": "workspace:*",
+    "@yme/database": "workspace:*",
+    "@yme/shared": "workspace:*",
+    "@yme/ai": "workspace:*",
+    "@yme/agents": "workspace:*",
+    "@yme/pipeline": "workspace:*",
+    "@yme/analytics": "workspace:*",
+    "@yme/video": "workspace:*"
   }
 }

@@ -289,6 +289,8 @@ function storyBrief(s: MockSubject, ctx: Ctx) {
 function writeScript(s: MockSubject, ctx: Ctx, isRevision: boolean) {
   const slug = slugify(s.company, 20);
   const arc = (Array.isArray(ctx.narrativeArc) ? ctx.narrativeArc : []) as Array<{ section: string; purpose: string }>;
+  const targetWords = typeof ctx.targetWords === 'number' ? ctx.targetWords : 1650;
+
   const sectionDefs = arc.length
     ? arc
     : [
@@ -300,26 +302,62 @@ function writeScript(s: MockSubject, ctx: Ctx, isRevision: boolean) {
       ];
 
   const bodies = [
-    `${s.company} looks like it is doing something irrational. ${s.signal} That is the part worth explaining, and the explanation is not the one you have probably heard.`,
-    `Here is the mechanism. ${s.thesis} None of that is a secret — it is in the filings. What makes it work is that it compounds quietly, over years, in a line item nobody was watching.`,
-    `Now the money. ${s.seriesTitle} moved like this: ${s.series.map((p) => `${p.label}, ${p.value}`).join('; ')} — measured in ${s.seriesUnit}. Put those on the same axis and the strategy stops looking like luck.`,
-    `The obvious objection is that a competitor can simply copy this. Sometimes they can. ${s.angle} The honest answer is that the advantage holds only as long as the switching cost does, and that is a testable condition, not a permanent one.`,
-    `So what generalises? Look for the business where the visible product and the profitable product are different things. Once you see that split, ${s.company} stops being a puzzle — and so does the next company that looks unbeatable for no obvious reason.`,
+    `${s.company} looks like it is doing something irrational. ${s.signal} That is the part worth explaining, and the explanation is not the one you have probably heard. Most coverage stops at the surface, which is why the same wrong answer keeps circulating.`,
+    `Here is the mechanism. ${s.thesis} None of that is a secret — it is in the filings. What makes it work is that it compounds quietly, over years, in a line item nobody was watching. Each individual decision looks modest. Together they add up to a position competitors cannot buy their way out of in a single cycle.`,
+    `Now the money. ${s.seriesTitle} moved like this: ${s.series.map((p) => `${p.label}, ${p.value}`).join('; ')} — measured in ${s.seriesUnit}. Put those on the same axis and the strategy stops looking like luck. The shape of that curve is the whole argument, and it is drawn from the company's own reporting rather than an estimate.`,
+    // Deliberately frames the DISPUTED claim as contested. A script that
+    // asserted this flatly would — correctly — fail the fact check, which is
+    // what the fact-checker test exercises.
+    `The obvious objection is that a competitor can simply copy this. Analysts disagree about how durable the advantage really is, and that disagreement is worth taking seriously rather than waving away. ${s.angle} Some argue the switching cost erodes as tooling matures; others contest that, pointing to how long the incumbent has had to entrench. The honest answer is that the advantage holds only as long as the switching cost does, and that is a testable condition rather than a permanent one.`,
+    `So what generalises? Look for the business where the visible product and the profitable product are different things. Once you see that split, ${s.company} stops being a puzzle — and so does the next company that looks unbeatable for no obvious reason. The test is simple: ask which line item would hurt most if it went to zero, and whether that is the thing the company is known for.`,
+    `One more thing worth sitting with. Every structural advantage was once a decision that looked unremarkable, taken by people who could not see the compounding from where they stood. That is the uncomfortable part of this story: the moment it was cheap to copy passed quietly, and nobody announced it.`,
   ];
 
-  const sections = sectionDefs.slice(0, 6).map((d, i) => ({
-    id: `s${i + 1}`,
-    heading: d.section,
-    narration: bodies[i % bodies.length]!,
-    claimKeys:
-      i === 2 ? [`${slug}-series`, `${slug}-segment-mix`] : i === 1 ? [`${slug}-mechanism`] : i === 3 ? [`${slug}-contested`] : [],
-    openLoop: i === 0 ? `Why does ${s.company} leave the obvious move on the table?` : i === sectionDefs.length - 1 ? null : 'What does that cost them?',
-  }));
+  const chosen = sectionDefs.slice(0, 6);
+  // Pad each section toward the target length so the mock exercises real
+  // durations, caption counts and render timing rather than a 90-second stub.
+  const perSection = Math.max(60, Math.round(targetWords / chosen.length));
 
-  return {
-    workingTitle: isRevision ? `${s.title} (rev)` : s.title,
-    sections,
-  };
+  const sections = chosen.map((d, i) => {
+    let narration = bodies[i % bodies.length]!;
+    let guard = 0;
+    while (countWordsApprox(narration) < perSection && guard < 8) {
+      narration += ' ' + elaboration(s, d.section, guard);
+      guard++;
+    }
+    return {
+      id: `s${i + 1}`,
+      heading: d.section,
+      narration,
+      claimKeys:
+        i === 2 ? [`${slug}-series`, `${slug}-segment-mix`] : i === 1 ? [`${slug}-mechanism`] : i === 3 ? [`${slug}-contested`] : [],
+      openLoop:
+        i === 0
+          ? `Why does ${s.company} leave the obvious move on the table?`
+          : i === chosen.length - 1
+            ? null
+            : 'What does that cost them?',
+    };
+  });
+
+  return { workingTitle: isRevision ? `${s.title} (rev)` : s.title, sections };
+}
+
+const countWordsApprox = (t: string) => t.trim().split(/\s+/).filter(Boolean).length;
+
+/** Filler that stays on-topic, so padded sections still read as prose. */
+function elaboration(s: MockSubject, section: string, i: number): string {
+  const lines = [
+    `Consider what that means in practice for anyone competing with ${s.company} on price alone.`,
+    `This is the part where most explanations stop, and stopping there is what produces the wrong conclusion about ${section.toLowerCase()}.`,
+    `It is worth being precise about the timing, because the order in which these decisions happened is what made them compound.`,
+    `None of this required a breakthrough. It required a willingness to accept a worse-looking number for several years running.`,
+    `The counter-example is instructive: firms that optimised the visible metric instead ended up with the better quarter and the weaker position.`,
+    `That gap between reported performance and structural position is exactly where the interesting business questions live.`,
+    `Read the filings and the pattern is legible; read the press coverage and it usually is not.`,
+    `Which raises the question this video has been circling from the start.`,
+  ];
+  return lines[i % lines.length]!;
 }
 
 function analyzeRetention(seed: string, ctx: Ctx) {
@@ -409,11 +447,14 @@ function storyboard(s: MockSubject, ctx: Ctx) {
   let index = 0;
 
   for (const section of src) {
-    // Split each section's narration into 2–3 beats so scenes stay short
-    // enough that a static shot never outstays its welcome.
-    const beats = splitIntoBeats(section.narration, 3);
+    // Split each section's narration into beats so a static shot never
+    // outstays its welcome. The visual director splits further if needed.
+    const beats = splitIntoBeats(section.narration, 4);
+    // The chart belongs on the beat that actually states the series, not on
+    // whichever beat happens to be last.
+    const chartBeatIndex = beats.findIndex((b) => s.series.some((pt) => b.includes(String(pt.value))));
     beats.forEach((beat, bi) => {
-      const isChartBeat = /\d/.test(beat) && bi === beats.length - 1;
+      const isChartBeat = bi === chartBeatIndex;
       scenes.push({
         id: `${section.id}-${bi}`,
         sectionId: section.id,

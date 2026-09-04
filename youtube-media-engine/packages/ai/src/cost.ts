@@ -19,11 +19,24 @@ export function priceLlmCall(model: string, usage: LlmUsage): number {
 export class CostTracker {
   private spent = 0;
   private readonly entries: Array<{ task: string; usd: number }> = [];
+  private currentStage: PipelineStage | 'DISCOVERY';
 
   constructor(
     private readonly limitUsd: number,
     private readonly ctx: { videoProjectId?: string | null; stage: PipelineStage | 'DISCOVERY' },
-  ) {}
+  ) {
+    this.currentStage = ctx.stage;
+  }
+
+  /**
+   * One tracker spans a whole pipeline run so the budget ceiling is global,
+   * but each charge has to be attributed to the stage that actually incurred
+   * it — otherwise the entire cost of a video lands on RESEARCH and the
+   * per-stage breakdown is useless for deciding what to optimise.
+   */
+  setStage(stage: PipelineStage | 'DISCOVERY'): void {
+    this.currentStage = stage;
+  }
 
   get totalUsd(): number {
     return Math.round(this.spent * 1e6) / 1e6;
@@ -58,7 +71,7 @@ export class CostTracker {
       videoProjectId: this.ctx.videoProjectId ?? null,
       category: 'LLM',
       provider: opts.provider,
-      stage: this.ctx.stage,
+      stage: this.currentStage,
       usd,
       units: opts.usage.inputTokens + opts.usage.outputTokens,
       unitLabel: 'tokens',

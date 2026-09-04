@@ -1,0 +1,35 @@
+{
+  "name": "@yme/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@yme/agents": "workspace:*",
+    "@yme/ai": "workspace:*",
+    "@yme/analytics": "workspace:*",
+    "@yme/config": "workspace:*",
+    "@yme/database": "workspace:*",
+    "@yme/pipeline": "workspace:*",
+    "@yme/shared": "workspace:*",
+    "@yme/storage": "workspace:*",
+    "argon2": "0.41.1",
+    "next": "15.5.25",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.49",
+    "tailwindcss": "3.4.19",
+    "typescript": "5.9.3"
+  }
+}

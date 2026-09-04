@@ -57,7 +57,7 @@ const AI_TELLS = [
   'it is important to note',
   "it's important to note",
   'delve into',
-  'a game changer',
+  'game changer',
   'game-changing',
   'revolutionize',
   'revolutionized the way',
@@ -94,6 +94,13 @@ export interface ExtractedAssertion {
   offset: number;
 }
 
+/**
+ * Words that turn a quoted span into an attributed statement. Without one of
+ * these nearby, quotation marks are punctuation, not a sourcing claim.
+ */
+const ATTRIBUTION_CUE =
+  /\b(said|says|saying|told|tells|wrote|writes|according to|per its|per the|stated|states|described|calls it|called it|put it|argued|argues|noted|notes|claimed|claims|announced|testified|in its (?:filing|report|statement|letter)|the (?:filing|report|statement) (?:said|says|reads))\b/i;
+
 export function extractAssertions(text: string): ExtractedAssertion[] {
   const out: ExtractedAssertion[] = [];
   const push = (re: RegExp, kind: ExtractedAssertion['kind']) => {
@@ -110,8 +117,21 @@ export function extractAssertions(text: string): ExtractedAssertion[] {
   push(/\b\d+(?:\.\d+)?x\b/gi, 'NUMBER');
   // Years and explicit dates.
   push(/\b(?:19|20)\d{2}\b/g, 'DATE');
-  // Quoted speech of at least a few words.
-  push(/[“"][^”"]{12,}[”"]/g, 'QUOTE');
+  // Quoted speech — but only where it is actually attributed.
+  //
+  // Flagging every quoted span produces mostly false positives: scare quotes,
+  // a term being introduced, a section title, a product name. Those are not
+  // factual claims about what somebody said, and a checker that reports five
+  // of them per script teaches the operator to ignore it. A quotation claim
+  // needs an attribution cue near it.
+  for (const m of text.matchAll(/[“"][^”"]{12,}[”"]/g)) {
+    if (m.index === undefined) continue;
+    const before = text.slice(Math.max(0, m.index - 90), m.index);
+    const after = text.slice(m.index + m[0].length, m.index + m[0].length + 90);
+    if (ATTRIBUTION_CUE.test(before) || ATTRIBUTION_CUE.test(after)) {
+      out.push({ text: m[0].trim(), kind: 'QUOTE', offset: m.index });
+    }
+  }
   // Unfalsifiable-sounding superlatives that need a source or softening.
   push(/\b(?:the (?:first|largest|biggest|most valuable|only|fastest[- ]growing))\b/gi, 'SUPERLATIVE');
 

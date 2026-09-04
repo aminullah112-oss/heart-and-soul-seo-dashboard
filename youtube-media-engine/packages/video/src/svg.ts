@@ -146,9 +146,12 @@ export function niceScale(min: number, max: number, targetTicks = 5): { min: num
   const niceMax = Math.ceil(max / step) * step;
 
   const ticks: number[] = [];
-  // Float accumulation drifts; derive each tick from the index instead.
+  // Deriving each tick from the index avoids compounding error, but binary
+  // floating point still cannot represent 0.2 exactly, so 3 * 0.2 lands on
+  // 0.6000000000000001. Round to the precision the step itself implies.
+  const decimals = Math.max(0, Math.min(10, -Math.floor(Math.log10(step)) + 1));
   const count = Math.round((niceMax - niceMin) / step);
-  for (let i = 0; i <= count; i++) ticks.push(niceMin + i * step);
+  for (let i = 0; i <= count; i++) ticks.push(Number((niceMin + i * step).toFixed(decimals)));
 
   return { min: niceMin, max: niceMax, step, ticks };
 }

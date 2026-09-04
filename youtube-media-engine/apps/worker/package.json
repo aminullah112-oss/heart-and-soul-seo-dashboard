@@ -1,0 +1,25 @@
+{
+  "name": "@yme/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "echo 'run with tsx'"
+  },
+  "dependencies": {
+    "@yme/agents": "workspace:*",
+    "@yme/ai": "workspace:*",
+    "@yme/analytics": "workspace:*",
+    "@yme/config": "workspace:*",
+    "@yme/database": "workspace:*",
+    "@yme/pipeline": "workspace:*",
+    "@yme/shared": "workspace:*",
+    "@yme/video": "workspace:*",
+    "bullmq": "5.81.4",
+    "ioredis": "5.11.1"
+  },
+  "devDependencies": { "tsx": "4.19.2", "typescript": "5.9.3", "@types/node": "22.10.5" }
+}

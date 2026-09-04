@@ -133,13 +133,21 @@ export async function buildStoryboard(opts: {
 
   if (scenes.length === 0) throw validationError('Storyboard produced no usable scenes');
 
-  const overlong = scenes.filter((s) => s.estimatedSeconds > MAX_SCENE_SECONDS);
-  if (overlong.length) {
-    log.warn(
-      { count: overlong.length, longest: Math.max(...overlong.map((s) => s.estimatedSeconds)) },
-      'scenes exceed the static-shot ceiling; render will apply motion to compensate',
+  // Split any scene that would hold a single shot past the ceiling.
+  //
+  // Warning about this was not enough: a model asked for "beats" reliably
+  // returns whole paragraphs, which produced a 29-second average shot length
+  // and a video that reads as a slideshow — exactly what spec §18 forbids.
+  // The fix has to be mechanical, because the constraint is arithmetic.
+  const paced = splitLongScenes(scenes, MAX_SCENE_SECONDS);
+  if (paced.length > scenes.length) {
+    log.info(
+      { before: scenes.length, after: paced.length },
+      'split over-long scenes to keep shot length under the ceiling',
     );
   }
+  scenes.length = 0;
+  scenes.push(...paced);
 
   const storyboard = await prisma.$transaction(async (tx) => {
     const existing = await tx.storyboard.findUnique({ where: { videoProjectId: project.id } });
@@ -190,6 +198,72 @@ export async function buildStoryboard(opts: {
     rejectedCharts,
     longestSceneSeconds: Math.max(...scenes.map((s) => s.estimatedSeconds)),
   };
+}
+
+type PlannedScene = {
+  id: string;
+  sectionId: string;
+  index: number;
+  narration: string;
+  visualKind: VisualKind;
+  visualQuery: string;
+  onScreenText: string | null;
+  chart: ChartSpec | null;
+  estimatedSeconds: number;
+};
+
+/**
+ * Splits scenes whose narration would hold one shot too long.
+ *
+ * Splits on sentence boundaries so narration and picture stay in step — a
+ * mid-sentence cut with the audio running across it is worse than a long shot.
+ * A chart scene is never split: the chart is the shot, and cutting away from
+ * a chart mid-explanation defeats the point of drawing it.
+ */
+export function splitLongScenes(scenes: PlannedScene[], maxSeconds: number): PlannedScene[] {
+  const out: PlannedScene[] = [];
+
+  for (const scene of scenes) {
+    if (scene.estimatedSeconds <= maxSeconds || scene.chart) {
+      out.push(scene);
+      continue;
+    }
+
+    const pieces = Math.min(6, Math.ceil(scene.estimatedSeconds / maxSeconds));
+    const sentences = scene.narration
+      .split(/(?<=[.!?])\s+/)
+      .map((x) => x.trim())
+      .filter(Boolean);
+
+    if (sentences.length < 2) {
+      // Nothing to split on; a single very long sentence stays whole.
+      out.push(scene);
+      continue;
+    }
+
+    const perPiece = Math.ceil(sentences.length / pieces);
+    const chunks: string[] = [];
+    for (let i = 0; i < sentences.length; i += perPiece) {
+      chunks.push(sentences.slice(i, i + perPiece).join(' '));
+    }
+
+    for (const [ci, chunk] of chunks.entries()) {
+      out.push({
+        ...scene,
+        id: ci === 0 ? scene.id : `${scene.id}-${ci}`,
+        narration: chunk,
+        // Only the first piece keeps the section's on-screen title; repeating
+        // it on every shot looks like a bug.
+        onScreenText: ci === 0 ? scene.onScreenText : null,
+        // Vary the visual so consecutive pieces are not the same still.
+        visualQuery: ci === 0 ? scene.visualQuery : `${scene.visualQuery}, alternate angle ${ci + 1}`,
+        estimatedSeconds: estimateNarrationSeconds(chunk),
+        index: 0,
+      });
+    }
+  }
+
+  return out.map((s, i) => ({ ...s, index: i }));
 }
 
 /**
