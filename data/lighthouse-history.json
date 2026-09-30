@@ -361,6 +361,16 @@
       "lcp": 2.47,
       "cls": 0.057,
       "tbt": 1390
+    },
+    {
+      "date": "2026-09-30",
+      "performance": 93,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 100,
+      "lcp": 2.51,
+      "cls": 0.057,
+      "tbt": 0
     }
   ]
 }
